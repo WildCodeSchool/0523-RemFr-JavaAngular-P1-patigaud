@@ -9,6 +9,8 @@ import { DemoPageComponent } from './pages/demo/demo.component';
 import { DemoComponent } from './components/demo/demo.component';
 import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
+import { MainPageComponent } from './pages/main-page/main-page.component';
+import { MapComponent } from './components/map/map.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { DemoDirective } from './directives/demo.directive';
     DemoPageComponent,
     DemoComponent,
     DemoPipe,
-    DemoDirective
+    DemoDirective,
+    MainPageComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
