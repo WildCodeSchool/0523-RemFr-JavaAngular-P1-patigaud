@@ -15,6 +15,8 @@ import { HomePageComponent } from './pages/home/home.page.component';
 import { UserPageComponent } from './pages/user/user.page.component';
 import { PotidexPageComponent } from './pages/potidex/potidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
+import { MapComponent } from './components/map/map.component';
+
 
 
 @NgModule({
@@ -29,7 +31,8 @@ import { BadgePageComponent } from './pages/badge/badge.page.component';
     HomePageComponent,
     UserPageComponent,
     PotidexPageComponent,
-    BadgePageComponent
+    BadgePageComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
