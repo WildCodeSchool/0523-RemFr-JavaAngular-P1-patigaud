@@ -3,30 +3,30 @@ import { RouterModule, Routes } from '@angular/router';
 import { DemoPageComponent } from './pages/demo/demo.component';
 
 
-import {FirstComponent} from './components/first/first.component'
-import {MainComponent} from './components/main/main.component'
-import {UserComponent} from './components/user/user.component'
-import {PotidexComponent} from './components/potidex/potidex.component'
-import {BadgeComponent} from './components/badge/badge.component'
+import {FirstPageComponent} from './pages/first/first.page.component';
+import {HomePageComponent} from './pages/home/home.page.component';
+import {UserPageComponent} from './pages/user/user.page.component';
+import {PotidexPageComponent} from './pages/potidex/potidex.page.component';
+import {BadgePageComponent} from './pages/badge/badge.page.component';
 
 const routes: Routes = [
   { 
     path: '', component: DemoPageComponent
   },
   { 
-    path: 'first', component: FirstComponent
+    path: 'first', component: FirstPageComponent
   },
   { 
-    path: 'main', component: MainComponent
+    path: 'home', component: HomePageComponent
   },
   { 
-    path: 'user', component: UserComponent 
+    path: 'user', component: UserPageComponent 
   },
   { 
-    path: 'potidex', component: PotidexComponent 
+    path: 'potidex', component: PotidexPageComponent 
   },
   { 
-    path: 'badge', component: BadgeComponent 
+    path: 'badge', component: BadgePageComponent 
   },
 ];
 

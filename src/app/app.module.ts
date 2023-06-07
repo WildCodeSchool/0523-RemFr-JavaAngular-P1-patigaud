@@ -10,11 +10,11 @@ import { DemoComponent } from './components/demo/demo.component';
 import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { FirstComponent } from './components/first/first.component';
-import { MainComponent } from './components/main/main.component';
-import { UserComponent } from './components/user/user.component';
-import { PotidexComponent } from './components/potidex/potidex.component';
-import { BadgeComponent } from './components/badge/badge.component';
+import { FirstPageComponent } from './pages/first/first.page.component';
+import { HomePageComponent } from './pages/home/home.page.component';
+import { UserPageComponent } from './pages/user/user.page.component';
+import { PotidexPageComponent } from './pages/potidex/potidex.page.component';
+import { BadgePageComponent } from './pages/badge/badge.page.component';
 
 
 @NgModule({
@@ -25,11 +25,11 @@ import { BadgeComponent } from './components/badge/badge.component';
     DemoPipe,
     DemoDirective,
     NavBarComponent,
-    FirstComponent,
-    MainComponent,
-    UserComponent,
-    PotidexComponent,
-    BadgeComponent
+    FirstPageComponent,
+    HomePageComponent,
+    UserPageComponent,
+    PotidexPageComponent,
+    BadgePageComponent
   ],
   imports: [
     BrowserModule,
