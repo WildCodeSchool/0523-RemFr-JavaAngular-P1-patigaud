@@ -1,5 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+//import { ApiGardenService } from 'src/app/services/api-gardens.service';
+import { HttpClient } from '@angular/common/http';
+import { Location } from 'src/app/location';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { ApiGardenService } from 'src/app/services/api-gardens.service';
 
 @Component({
   selector: 'app-patidex',
@@ -8,21 +12,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PatidexComponent implements OnInit {
 
-  locationList: any
+  constructor(private apiGardenService: ApiGardenService) { }
 
-  constructor(private httpClient: HttpClient) { }
+  locations: any
+  status = "loading"
+
+  getLocations() {
+    this.apiGardenService.getGardenList()
+    .then(() => {
+      this.locations = this.apiGardenService.data;
+      console.log(this.locations);
+      this.status = "ready"
+    })
+    .catch((error) => {
+      console.error(error)
+    })   
+  }
 
   ngOnInit(): void {
-    this.loadGardenList();
+    this.getLocations();
   }
-
-  loadGardenList() {
-    this.httpClient
-      .get("https://data.tours-metropole.fr/api/records/1.0/search/?dataset=espaces-verts-tours-metropole-val-de-loire&q=&facet=commune&facet=libelle&facet=structure&facet=adresse&facet=aire_en_m")
-      .subscribe((response) => {
-        this.locationList = response as any
-      }) ;
-
-  }
-  
 }
