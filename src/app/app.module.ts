@@ -11,6 +11,7 @@ import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { MapComponent } from './components/map/map.component';
+import { TestlocComponent } from './components/testloc/testloc.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { MapComponent } from './components/map/map.component';
     DemoPipe,
     DemoDirective,
     MainPageComponent,
-    MapComponent
+    MapComponent,
+    TestlocComponent
   ],
   imports: [
     BrowserModule,
