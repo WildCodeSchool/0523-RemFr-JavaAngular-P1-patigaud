@@ -9,6 +9,12 @@ import { DemoPageComponent } from './pages/demo/demo.component';
 import { DemoComponent } from './components/demo/demo.component';
 import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { FirstComponent } from './components/first/first.component';
+import { MainComponent } from './components/main/main.component';
+import { UserComponent } from './components/user/user.component';
+import { PotidexComponent } from './components/potidex/potidex.component';
+import { BadgeComponent } from './components/badge/badge.component';
 
 
 @NgModule({
@@ -17,13 +23,18 @@ import { DemoDirective } from './directives/demo.directive';
     DemoPageComponent,
     DemoComponent,
     DemoPipe,
-    DemoDirective
+    DemoDirective,
+    NavBarComponent,
+    FirstComponent,
+    MainComponent,
+    UserComponent,
+    PotidexComponent,
+    BadgeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
-  ],
+    BrowserAnimationsModule,],
   providers: [],
   bootstrap: [AppComponent]
 })
