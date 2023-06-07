@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GeolocService } from 'src/app/services/geoloc.service';
+import { GeolocService, Coordinates } from 'src/app/services/geoloc.service';
 
 @Component({
   selector: 'app-testloc',
@@ -18,14 +18,17 @@ export class TestlocComponent {
   }
 
   getCurrentPosition(): void {
-    this.geoloc.getCurrentPosition()
-      .then((coords) => {
-        this.latitude = coords.latitude;
-        this.longitude = coords.longitude;
-      })
-      .catch((error) => {
-        this.error = error;
-      });
+    this.geoloc.getCurrentPosition().subscribe({
+      next: (coords: Coordinates) => {
+        this.latitude = coords.latitude
+        this.longitude = coords.longitude
+      },
+      error: (error: string) => {
+        console.error(error);
+      },
+      complete: () => {
+        console.log('done')
+      }
+    });
   }
-
 }
