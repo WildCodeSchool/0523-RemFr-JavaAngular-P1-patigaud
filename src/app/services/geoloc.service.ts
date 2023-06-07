@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, interval } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface Coordinates {
   latitude: number;
