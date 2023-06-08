@@ -13,9 +13,10 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { FirstPageComponent } from './pages/first/first.page.component';
 import { HomePageComponent } from './pages/home/home.page.component';
 import { UserPageComponent } from './pages/user/user.page.component';
-import { PotidexPageComponent } from './pages/potidex/potidex.page.component';
+import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
+
 
 
 
@@ -30,7 +31,7 @@ import { MapComponent } from './components/map/map.component';
     FirstPageComponent,
     HomePageComponent,
     UserPageComponent,
-    PotidexPageComponent,
+    PatidexPageComponent,
     BadgePageComponent,
     MapComponent
   ],
