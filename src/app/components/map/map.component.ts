@@ -9,8 +9,6 @@ import * as L from 'leaflet';
 export class MapComponent implements OnInit{
     private map!: L.Map;
 
-    constructor() { }
-
     initMap(): void {
       this.map = L.map('map', {
         maxBounds: [
