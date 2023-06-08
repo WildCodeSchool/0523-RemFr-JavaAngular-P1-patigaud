@@ -4,11 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DemoPageComponent } from './pages/demo/demo.component';
 import { DemoComponent } from './components/demo/demo.component';
 import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
+import { PatidexComponent } from './components/patidex/patidex.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { FirstPageComponent } from './pages/first/first.page.component';
 import { HomePageComponent } from './pages/home/home.page.component';
@@ -19,8 +21,6 @@ import { MapComponent } from './components/map/map.component';
 import { TestlocComponent } from './components/testloc/testloc.component';
 
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +28,7 @@ import { TestlocComponent } from './components/testloc/testloc.component';
     DemoComponent,
     DemoPipe,
     DemoDirective,
+    PatidexComponent,
     NavBarComponent,
     FirstPageComponent,
     HomePageComponent,
@@ -40,7 +41,10 @@ import { TestlocComponent } from './components/testloc/testloc.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,],
+    BrowserAnimationsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -26,7 +26,6 @@ const routes: Routes = [
   },
   {
     path: 'geoloc', component: TestlocComponent
-  },
 ];
 
 @NgModule({
