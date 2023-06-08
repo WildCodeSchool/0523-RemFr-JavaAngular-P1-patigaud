@@ -1,0 +1,10 @@
+<h2>My Current Pos is :</h2>
+<div *ngIf="latitude && longitude">    
+    <p>Latitude: {{ latitude }}</p>
+    <p>Longitude: {{ longitude }}</p>
+</div>
+  
+<div *ngIf="error">
+    <h2>Error:</h2>
+    <p>{{ error }}</p>
+</div>
