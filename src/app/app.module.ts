@@ -9,8 +9,14 @@ import { DemoPageComponent } from './pages/demo/demo.component';
 import { DemoComponent } from './components/demo/demo.component';
 import { DemoPipe } from './pipes/demo.pipe';
 import { DemoDirective } from './directives/demo.directive';
-import { MainPageComponent } from './pages/main-page/main-page.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { FirstPageComponent } from './pages/first/first.page.component';
+import { HomePageComponent } from './pages/home/home.page.component';
+import { UserPageComponent } from './pages/user/user.page.component';
+import { PotidexPageComponent } from './pages/potidex/potidex.page.component';
+import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
+
 
 
 @NgModule({
@@ -20,14 +26,18 @@ import { MapComponent } from './components/map/map.component';
     DemoComponent,
     DemoPipe,
     DemoDirective,
-    MainPageComponent,
+    NavBarComponent,
+    FirstPageComponent,
+    HomePageComponent,
+    UserPageComponent,
+    PotidexPageComponent,
+    BadgePageComponent,
     MapComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
-  ],
+    BrowserAnimationsModule,],
   providers: [],
   bootstrap: [AppComponent]
 })
