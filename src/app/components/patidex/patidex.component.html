@@ -1,0 +1,24 @@
+<section>
+    <div *ngIf="status === 'ready'">
+    <ul>
+        <div *ngFor="let location of locations">
+            id : {{location.id}} <br>
+            adresse : {{location.address}} <br>
+            coordonnées de la forme : {{location.shape}} <br>
+            geoPoint : {{location.geoPoint}} <br>
+            Surface :{{location.area}} m² <br>
+            Structure: {{location.structure}}<br>
+            Code postal : {{location.postalCode}}<br>
+            Libellé : {{ location.label}} <br>
+            Ville : {{ location.city }}
+            <br><br>
+        </div>
+    </ul>
+</div>
+<div *ngIf="status === 'loading'">
+    Loading...
+</div>
+<div *ngIf="status === 'error'">
+    Error occurred.
+</div>
+</section>
