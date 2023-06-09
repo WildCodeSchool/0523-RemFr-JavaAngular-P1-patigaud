@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiGardenService } from 'src/app/services/api-gardens.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-patidex',
@@ -15,13 +16,7 @@ export class PatidexComponent implements OnInit {
 
   getLocations() {
     this.apiGardenService.getGardenList()
-   .then(() => {
-      this.locations = this.apiGardenService.data;
-      this.status = "ready"
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+    .subscribe((response) => this.locations = response)
   }
 
   ngOnInit(): void {
