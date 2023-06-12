@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #252525;
+}
+
+.top-bar {
+  background: linear-gradient(180deg, rgba(0, 191, 125, 1) 0%, rgba(0, 138, 90, 1) 100%);
+  z-index: 5000;
+  position: relative;
+  box-shadow: 1px 5px 5px rgba($color: #000000, $alpha: 0.2);
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 80px;
+  max-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translate3d(0, 0, 0);
+}
+
+.top-bar .search {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 66.6vw;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  background: rgb(0, 191, 125);
+  border-radius: 50%;
+  transition: all 1s;
+  z-index: 4;
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.top-bar .search::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 16px;
+  right: 0;
+  bottom: 0;
+  left: 16px;
+  width: 12px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+
+.top-bar .search::after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -5px;
+  width: 17.5px;
+  height: 17.5px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all .5s;
+}
+
+.top-bar .focused {
+  width: 200px;
+  right: 50px;
+  bottom: 55vh;
+  top: 5vh;
+  margin: auto;
+  padding: 0 40px;
+  opacity: 1;
+  position: absolute;
+  cursor: text;
+  transition: all 1s;
+}
+
+.top-bar .test {
+  right: 66.6vw;
+  bottom: 55vh;
+  top: 5vh;
+  position: absolute;
+  background: #151515;
+  z-index: 6;
+}
+
+.top-bar .test::before {
+  top: 0;
+  left: 0;
+  width: 17.5px;
+}
+
+.top-bar .test::after {
+  top: 0;
+  left: 0;
+  width: 17.5px;
+  height: 2px;
+  border: none;
+  background: white;
+  border-radius: 0%;
+  transform: rotate(-45deg);
+}
+
+.top-bar input {
+  font-family: 'Ubuntu', monospace;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 66.6vw;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  outline: none;
+  border: none;
+  background: rgb(0, 191, 125);
+  color: white;
+  text-shadow: 0 0 10px rgb(0, 191, 125);
+  padding: 25px 25px;
+  border-radius: 30px;
+  box-shadow: 0 0 25px 0 rgba(0, 138, 90, 1), 0 20px 25px 0 rgba(0, 0, 0, 0.2);
+  transition: all 1s;
+  opacity: 0;
+  z-index: 5;
+  font-weight: bolder;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.top-bar input::placeholder {
+  color: white;
+  opacity: 0.5;
+  font-weight: bolder;
+}
+
+.result-list {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 80%;
+  overflow: scroll;
+  margin-top: 40px;
+}
+
+.result-container {
+  width: 95%;
+  height: auto;
+  margin: 10px 0 10px 0;
+  border-bottom: 1px solid rgba(49, 49, 49, 0.5);
+  padding-bottom: 6px;
+  .result-city {
+    font-size: 0.7em;
+    font-family: "Ubuntu", "PT Serif", sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .result-address {
+    font-size: 1em;
+    font-family: "Ubuntu", "PT Serif", sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+    padding-bottom: 4px;
+  }
+}

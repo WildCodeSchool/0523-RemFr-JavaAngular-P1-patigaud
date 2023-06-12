@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import { ApiGardenService } from "src/app/services/api-gardens.service";
 import { Location } from "../../location";
+import { MapService } from "src/app/services/map/map.service";
 
 @Component({
   selector: "app-map",
@@ -9,11 +10,11 @@ import { Location } from "../../location";
   styleUrls: ["./map.component.scss"],
 })
 export class MapComponent implements OnInit {
-  private map!: L.Map;
+  map!: L.Map;
   locations!: Location[];
   status = "loading";
 
-  constructor(private apiGardenService: ApiGardenService) {}
+  constructor(private apiGardenService: ApiGardenService, private MapService: MapService) { }
 
   ngOnInit() {
     this.initMap();
@@ -40,8 +41,8 @@ export class MapComponent implements OnInit {
       }
       L.marker(geopoint.reverse(), { icon: this.myIcon }).addTo(this.map)
         .bindPopup(`
-          Adresse: ${location.address}, ${location.city}, ${location.postalCode}<br>
-          Taille en m²: ${location.area}
+        ${location.address} <br> ${location.city}, ${location.postalCode}<br>
+        Taille en m²: ${location.area}m²
         `);
     });
   }
@@ -53,7 +54,10 @@ export class MapComponent implements OnInit {
         [51.0833, 8.181],
       ],
       minZoom: 6,
+      zoomControl: false,
     }).setView([47.383333, 0.683333], 13);
+
+    this.MapService.setMap(this.map);
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
