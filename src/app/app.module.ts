@@ -19,6 +19,7 @@ import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
 import { TestlocComponent } from './components/testloc/testloc.component';
+import { GeolocSpoofComponent } from './components/geoloc-spoof/geoloc-spoof.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { TestlocComponent } from './components/testloc/testloc.component';
     PatidexPageComponent,
     BadgePageComponent,
     MapComponent,
-    TestlocComponent
+    TestlocComponent,
+    GeolocSpoofComponent
   ],
   imports: [
     BrowserModule,
