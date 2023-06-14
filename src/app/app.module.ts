@@ -19,6 +19,14 @@ import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
 import { TestlocComponent } from './components/testloc/testloc.component';
+import { AddUserComponent } from './components/user/add-user/add-user.component';
+import { EditUserComponent } from './components/user/edit-user/edit-user.component';
+import { ViewUserComponent } from './components/user/view-user/view-user.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { environment } from '../app/environments/environment'
+import { FormsModule } from '@angular/forms';
+import { UsersListComponent } from './components/user/users-list/users-list.component';
 
 
 @NgModule({
@@ -36,7 +44,11 @@ import { TestlocComponent } from './components/testloc/testloc.component';
     PatidexPageComponent,
     BadgePageComponent,
     MapComponent,
-    TestlocComponent
+    TestlocComponent,
+    AddUserComponent,
+    EditUserComponent,
+    ViewUserComponent,
+    UsersListComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +56,10 @@ import { TestlocComponent } from './components/testloc/testloc.component';
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

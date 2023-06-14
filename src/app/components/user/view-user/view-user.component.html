@@ -1,0 +1,47 @@
+<div *ngIf="currentUser" class="edit-form">
+    <h4>User</h4>
+    <form>
+        <div class="form-group">
+            <label for="id">Id</label>
+            <!--- TODO : remove key after all tests -->
+            <input type="text" class="form-control" id="id" [(ngModel)]="currentUser.key" name="id">
+        </div>
+        <div class="form-group">
+            <label for="pseudo">pseudo</label>
+            <input type="text" class="form-control" id="pseudo" [(ngModel)]="currentUser.pseudo" name="pseudo" />
+        </div>
+        <div class="form-group">
+            <legend>Choose a gender :</legend>
+            <div>
+                  <input type="radio" class="form-control" id="male" [(ngModel)]="currentUser.gender" name="gender" value="M">
+            <label for="male">Male</label>
+            </div>
+            <div>
+              <input type="radio" class="form-control" id="female" [(ngModel)]="currentUser.gender" name="gender" value="F">
+        <label for="female">Female</label>
+            </div>
+            <div>
+                 <input type="radio" class="form-control" id="no_gender"[(ngModel)]="currentUser.gender" name="gender" value="NG">
+         <label for="no_gender">No gender</label>
+            </div>
+          </div>
+    </form>
+     <!--- TODO : remove key after all tests -->
+    <p>user id : {{currentUser.key}}</p>
+    <p>user pseudo : {{currentUser.pseudo}}</p>
+    <p>user gender: {{currentUser.gender}}</p>
+
+    <button class="badge badge-danger mr-2" (click)="deleteUser()">
+        Delete
+    </button>
+
+    <button type="submit" class="badge badge-success" (click)="updateUser()">
+        Update
+    </button>
+    <p>{{ message }}</p>
+</div>
+
+<div *ngIf="!currentUser">
+    <br />
+    <p>Cannot access this Tutorial...</p>
+</div>

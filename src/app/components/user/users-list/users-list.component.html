@@ -1,0 +1,33 @@
+<div class="list row">
+    <div class="col-md-6">
+      <h4>Users List</h4>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let user of users; let i = index"
+          [class.active]="i == currentIndex"
+          (click)="setActiveUser(user, i)"
+        >
+        <a [routerLink]="['/viewUser', user.key]">  {{ user.key }}</a>  {{ user.pseudo }}
+        
+        </li>
+      </ul>
+  
+      <button class="m-3 btn btn-sm btn-danger" (click)="removeAllusers()">
+        Remove All
+      </button>
+    </div>
+
+  
+      <div *ngIf="!currentUser">
+        <br />
+        <p>Please click on a Tutorial...</p>
+      </div>
+    </div>
+
+  <div>
+   
+          <a [routerLink]="['/addUser']" class="nav-link">Add</a>
+       
+      <router-outlet></router-outlet>
+    </div>

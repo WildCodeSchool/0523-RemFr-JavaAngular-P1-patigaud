@@ -1,0 +1,163 @@
+.submit-form {
+    height: 100vh;
+}
+
+.gender_image {
+    width: 100vw;
+    display: flex;
+    justify-content: space-evenly;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+.title {
+    text-align: center;
+    width: 100vw;
+    display: block;
+}
+
+#title, .legend {
+    color: white;
+    font-size: x-large;
+    opacity: 1;
+    font-family: Ubuntu;
+    width: 50vw;
+    background-color: #00BF7D;
+    border: none;
+    text-align: center;
+}
+
+#title::placeholder {
+    color: white;
+    font-size: x-large;
+    font-family: Ubuntu;
+    opacity: 1;
+}
+
+.card {
+    position: absolute;
+    width: 60%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transition: transform .4s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.container {
+    width: 50vw;
+    //height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto 2rem auto;
+    transform-style: preserve-3d;
+}
+
+.container input[type=radio] {
+    display: none;
+}
+
+.cards {
+    position: relative;
+    width: 100%;
+    height: 5rem;
+    margin-bottom: 20px;
+}
+
+img {
+    object-fit: cover;
+}
+
+#male:checked~.cards #no_gender-1,
+#female:checked~.cards #male-1,
+#no_gender:checked~.cards #female-1 {
+    transform: translatex(-40%) scale(.8);
+    opacity: .4;
+    z-index: 0;
+}
+
+#male:checked~.cards #female-1,
+#female:checked~.cards #no_gender-1,
+#no_gender:checked~.cards #male-1 {
+    transform: translatex(40%) scale(.8);
+    opacity: .4;
+    z-index: 0;
+}
+
+#male:checked~.cards #male-1,
+#female:checked~.cards #female-1,
+#no_gender:checked~.cards #no_gender-1 {
+    transform: translatex(0) scale(1);
+    opacity: 1;
+    z-index: 1;
+
+}
+
+.line {
+    height: 10px;
+    border-bottom: 4px #F2FFDF solid;
+    width: 65vw;
+    margin: 0 auto 3rem;;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+.legend {
+    color: white;
+    font-size: x-large;
+    opacity: 1;
+    font-family: Ubuntu;
+    margin: 0 auto 0;
+}
+
+.choose_gender {
+    display: flex;
+    width: 100vw;
+    justify-content: space-evenly;
+}
+
+.choose_gender div {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.choose_gender label {
+    display: flex;
+    flex-direction: column;
+    height: 4rem;
+    justify-content: space-evenly;
+    color: white;
+    font-size: large;
+    opacity: 1;
+    font-family: Ubuntu;
+    align-items: center;
+}
+
+input[type='radio'] {
+    width: 15px;
+    height: 15px;
+    accent-color: green;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+.button_container {
+    width: 100vw;
+    text-align: center;
+    margin: 3rem auto;
+}
+
+button {
+    background: linear-gradient(#00BF7D, #008A5A);
+    border: 1px solid black;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+    width: 10rem;
+    height: 3rem;
+
+    color: white;
+    font-size: large;
+}
