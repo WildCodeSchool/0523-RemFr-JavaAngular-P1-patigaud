@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,7 +27,9 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../app/environments/environment'
 import { FormsModule } from '@angular/forms';
 import { UsersListComponent } from './components/user/users-list/users-list.component';
-
+import { SearchBarComponent } from "./components/search-bar/search-bar.component";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { FormsModule } from "@angular/forms"; 
 
 @NgModule({
   declarations: [
@@ -48,7 +50,7 @@ import { UsersListComponent } from './components/user/users-list/users-list.comp
     AddUserComponent,
     EditUserComponent,
     ViewUserComponent,
-    UsersListComponent
+    SearchBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,12 +58,12 @@ import { UsersListComponent } from './components/user/users-list/users-list.comp
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    HttpClientModule,
     AngularFireModule.initializeApp(environment),
     AngularFireDatabaseModule,
-    FormsModule
+    DragDropModule,
+    FormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
