@@ -57,7 +57,7 @@ import { UsersListComponent } from './components/user/users-list/users-list.comp
     HttpClientModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule.initializeApp(environment),
     AngularFireDatabaseModule,
     FormsModule
   ],
