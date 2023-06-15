@@ -1,0 +1,11 @@
+<div class="top-bar" id="top-bar" [@expandCollapse]="isFocused ? 'expanded' : 'collapsed'">
+  <input type="text" placeholder="Search..." (focus)="toggleFocus($event)" (input)="onInput($event)"
+    [(ngModel)]="inputText" id="search-input" [ngClass]="{'focused': isFocused}" />
+  <div class="search" id="search-icon" (click)="toggleUnFocus($event)" [ngClass]="{'test': isFocused}"></div>
+  <div class="result-list" *ngIf="isFocused">
+    <div class="result-container" *ngFor="let result of searchResults" (click)="goToLocation(result)">
+      <div class="result-address">{{ result.address }}</div>
+      <div class="result-city">{{ result.city }}, {{result.postalCode}}</div>
+    </div>
+  </div>
+</div>
