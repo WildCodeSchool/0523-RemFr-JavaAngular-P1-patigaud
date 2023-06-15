@@ -18,9 +18,6 @@ export class ViewUserComponent {
   sub: any;
   users: any;
   allUsers: any;
-  test?: string;
-  test2?: string | null;
-  test3?: string;
 
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute) { }
 
