@@ -1,0 +1,55 @@
+<section>
+  <div class="submit-form">
+  <div class="gender_image container">
+    <input type="radio" class="form-control" id="male" [(ngModel)]="user.gender" name="forCssOnly" value="M">
+    <input type="radio" class="form-control" id="female" [(ngModel)]="user.gender" name="forCssOnly" value="F">
+    <input type="radio" class="form-control" id="no_gender" [(ngModel)]="user.gender" name="forCssOnly" value="NG">
+    <div class="cards">
+      <label for="male-1" id="male-1" class="male_image card">
+        <img src="/assets/user2.png" alt="Un avatar pour un homme.">
+      </label>
+
+      <label class="women_image card" for="female-1"
+        id="female-1">
+        <img src="/assets/user3.png" alt="Un avater pour une femme.">
+      </label>
+
+      <label class="no_gender_image card"
+        for="no_gender-1" id="no_gender-1">
+        <img src="/assets/user1.png" alt="Un avatar pour non_genré.">
+      </label>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label class="title" for="title">    
+      <input placeholder="Pseudo" type="text" class="form-control" id="title" required [(ngModel)]="user.pseudo" name="title"/>
+</label>
+  </div>
+
+  <div class="line"></div>
+
+    <legend class="legend">Sexe</legend>
+  <div class="form-group choose_gender">
+    <div>
+      <label for="male">
+        <input type="radio" class="form-control" id="male" [(ngModel)]="user.gender" name="gender" value="M">
+        Homme</label>
+    </div>
+    <div>
+      <label for="female">
+        <input type="radio" class="form-control" id="female" [(ngModel)]="user.gender" name="gender" value="F">
+        Femme</label>
+    </div>
+    <div>
+      <label for="no_gender">
+        <input type="radio" class="form-control" id="no_gender" [(ngModel)]="user.gender" name="gender" value="NG">
+        Non genré</label>
+    </div>
+  </div>
+<div class="button_container">
+    <button (click)="saveUser()" class="btn btn-success">Enregistrer</button>
+</div>
+</div>
+</section>

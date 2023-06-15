@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiGardenService } from 'src/app/services/api-gardens.service';
 import { Observable } from 'rxjs';
+import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.service';
 
 @Component({
   selector: 'app-patidex',

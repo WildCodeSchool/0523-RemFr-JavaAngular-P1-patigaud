@@ -1,0 +1,40 @@
+<div *ngIf="currentUser" class="edit-form">
+    <h4>User</h4>
+    <form>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          [(ngModel)]="currentUser.pseudo"
+          name="pseudo"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description">Gender</label>
+        <input
+          type="text"
+          class="form-control"
+          id="description"
+          [(ngModel)]="currentUser.gender"
+          name="gender"
+        />
+      </div>
+    </form>
+  
+    <button class="badge badge-danger mr-2" (click)="deleteUser()">
+      Delete
+    </button>
+  
+    <button type="submit" class="badge badge-success" (click)="updateUser()">
+      Update
+    </button>
+    <p>{{ message }}</p>
+  </div>
+  
+  <div *ngIf="!currentUser">
+    <br />
+    <p>Cannot access this Tutorial...</p>
+  </div>
+  

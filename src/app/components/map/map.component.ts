@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import * as L from "leaflet";
-import { ApiGardenService } from "src/app/services/api-gardens.service";
 import { Location } from "../../location";
+import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 import { MapService } from "src/app/services/map/map.service";
+
 
 @Component({
   selector: "app-map",
