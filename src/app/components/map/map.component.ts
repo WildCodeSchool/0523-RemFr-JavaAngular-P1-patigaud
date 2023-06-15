@@ -13,7 +13,12 @@ export class MapComponent implements OnInit {
   map!: L.Map;
   locations!: Location[];
   status = "loading";
-
+  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667],[51.0833, 8.181]];
+  private readonly DEFAULT_MAP_COORD: L.LatLngExpression = [47.383333, 0.683333];
+  private readonly DEFAULT_ZOOM: number = 13;
+  private readonly DEFAULT_MAX_ZOOM: number = 19;
+  private readonly DEFAULT_MIN_ZOOM: number = 6;
+  
   constructor(private apiGardenService: ApiGardenService, private MapService: MapService) { }
 
   ngOnInit() {
@@ -49,13 +54,10 @@ export class MapComponent implements OnInit {
 
   initMap(): void {
     this.map = L.map("map", {
-      maxBounds: [
-        [42.361, -4.76667],
-        [51.0833, 8.181],
-      ],
-      minZoom: 6,
+      maxBounds: this.DEFAULT_MAX_BOUND,
+      minZoom: this.DEFAULT_MIN_ZOOM,
       zoomControl: false,
-    }).setView([47.383333, 0.683333], 13);
+    }).setView(this.DEFAULT_MAP_COORD, this.DEFAULT_ZOOM);
 
     this.MapService.setMap(this.map);
 
@@ -64,7 +66,7 @@ export class MapComponent implements OnInit {
       {
         attribution: "©OpenStreetMap, ©CartoDB",
         subdomains: "abcd",
-        maxZoom: 19,
+        maxZoom: this.DEFAULT_MAX_ZOOM,
       }
     ).addTo(this.map);
   }

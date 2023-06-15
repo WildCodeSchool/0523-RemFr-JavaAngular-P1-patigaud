@@ -23,6 +23,7 @@ export class SearchBarComponent implements AfterViewInit {
   inputText = '';
   isFocused = false;
   itHasBeenReversed = false;
+  private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
 
   constructor(private mapService: MapService) { }
 
@@ -84,7 +85,7 @@ export class SearchBarComponent implements AfterViewInit {
       Taille en m²: ${location.area}m²
     `;
     const popup: L.Popup = L.popup().setLatLng(geopoint).setContent(popupContent);
-    this.map.flyTo(geopoint, 18);
+    this.map.flyTo(geopoint, this.DEFAULT_MAP_ZOOM_FLYTO);
     setTimeout(() => this.map.openPopup(popup), 400);
   }
 }
