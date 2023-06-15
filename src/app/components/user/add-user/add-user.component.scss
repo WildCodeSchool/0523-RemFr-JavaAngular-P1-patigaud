@@ -33,6 +33,10 @@
     opacity: 1;
 }
 
+#title:focus-visible{
+    outline: none;
+} 
+
 .card {
     position: absolute;
     width: 60%;
