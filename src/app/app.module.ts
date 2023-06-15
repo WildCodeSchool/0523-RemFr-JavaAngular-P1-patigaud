@@ -25,7 +25,6 @@ import { ViewUserComponent } from './components/user/view-user/view-user.compone
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../app/environments/environment'
-import { FormsModule } from '@angular/forms';
 import { UsersListComponent } from './components/user/users-list/users-list.component';
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -51,6 +50,7 @@ import { FormsModule } from "@angular/forms";
     EditUserComponent,
     ViewUserComponent,
     SearchBarComponent,
+    UsersListComponent
   ],
   imports: [
     BrowserModule,

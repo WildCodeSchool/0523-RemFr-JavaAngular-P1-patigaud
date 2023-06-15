@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ApiGardenService } from 'src/app/services/api-gardens.service';
 import { Location } from '../../location';
+import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.service';
 
 @Component({
   selector: 'app-home',
