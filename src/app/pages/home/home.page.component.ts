@@ -9,6 +9,8 @@ import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.servic
 })
 export class HomePageComponent {
   locations!: Location[];
+  isLoading = true;
+  loadingImg = './assets/loadingImg.png'
 
   constructor(private apiGardenService: ApiGardenService) { }
 
@@ -19,6 +21,13 @@ export class HomePageComponent {
   getLocations() {
     this.apiGardenService.getGardenList().subscribe((response) => {
       this.locations = response;
+      this.simulateMinimumLoadingTime();
     });
+  }
+
+  simulateMinimumLoadingTime() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 5000);
   }
 }
