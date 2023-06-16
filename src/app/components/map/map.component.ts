@@ -36,7 +36,7 @@ export class MapComponent implements OnInit {
     });
   }
 
-  public drawPolygons(locations: Location[]) {
+  drawPolygons(locations: Location[]) {
     locations.forEach((location: Location) => {
       const geopoint: number[] | any = location.geoPoint;
       const shape: number[] | undefined = location?.shape;
