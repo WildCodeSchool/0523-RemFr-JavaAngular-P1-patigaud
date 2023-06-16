@@ -3,6 +3,7 @@ import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
 import { FormsModule } from '@angular/forms';
 import { map } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',
@@ -14,7 +15,8 @@ export class AddUserComponent implements OnInit {
   user: any = new User();
   users: User[] = [];
   userFromDb: any;
-  constructor(private userService: UserService) { }
+  connectedUser: User = {}
+  constructor(private userService: UserService, private router : Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
@@ -25,14 +27,18 @@ export class AddUserComponent implements OnInit {
     if(this.userFromDb) {
            alert(`Utilisateur reconnu, vous allez être connecté en tant que ${this.userFromDb.pseudo}, 
      avec le genre ${this.userFromDb.gender} et l'id ${this.userFromDb.key}`);
-      //TODO : launch app with this user
+     this.userService.setConnectedUser(this.userFromDb);
+     localStorage.setItem('pseudo',this.userFromDb.pseudo);
+     console.log(localStorage.getItem('key'))
+     this.router.navigate(['']);
     }
   else {
     const createdUserKey = this.userService.create(this.user);
     this.user.key = createdUserKey;
       alert(`user created, vous allez être connecté en tant que ${this.user.pseudo}, 
       avec le genre ${this.user.gender} et l'id ${this.user.key}`);
-      //TODO : launch app with new User
+      this.userService.setConnectedUser(this.user);
+      this.router.navigate(['']);
     };
   }
 
@@ -47,5 +53,5 @@ export class AddUserComponent implements OnInit {
       ).subscribe(data => {
         this.users = data;
       })
-  }
+    }
 }

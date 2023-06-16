@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { User } from 'src/app/models/user';
 
 
@@ -14,7 +14,12 @@ export class UserService {
   userRef: AngularFireList<User>;
   reference: any;
   id: any;
-  users: User[] = [];
+  users: any[] = [];
+  userPseudo: any = "";
+  userFromDb: any;
+  retrievedUser: any;
+
+  public connectedUser!: string | null;
 
   constructor(private db: AngularFireDatabase) {
     this.userRef = db.list(this.dbPath);
@@ -40,5 +45,27 @@ export class UserService {
 
   deleteAll(): Promise<void> {
     return this.userRef.remove();
+  }
+
+  setConnectedUser(connectedUser: User) {
+    // this.connectedUser = connectedUser;
+  }
+
+  getConnectedUser(): any {
+
+    this.getAll().snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe(data => {
+        this.users = data; 
+        this.userPseudo = localStorage.getItem('pseudo');
+        this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.userPseudo.toLowerCase());
+        console.log(this.userFromDb);
+        return this.retrievedUser = this.userFromDb;
+      })
   }
 }
