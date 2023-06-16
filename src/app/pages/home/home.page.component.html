@@ -1,3 +1,14 @@
-<app-search-bar [locations]="locations"></app-search-bar>
-<app-map></app-map>
-<app-nav-bar></app-nav-bar>
+<section *ngIf="isLoading" class="loading-section">
+    <div class="title-box">
+        <h1 id="title">PATIGAUD</h1>
+        <h4 id="catchphrase">Baladez-Vous tous !</h4>
+    </div>
+    <div class="img-box">
+        <img class="loading-image" [src]="loadingImg" alt="loading" width="300px" height="300px"/>
+    </div>
+</section>
+<div *ngIf="!isLoading">
+    <app-search-bar [locations]="locations"></app-search-bar>
+    <app-map></app-map>
+    <app-nav-bar></app-nav-bar>
+</div>

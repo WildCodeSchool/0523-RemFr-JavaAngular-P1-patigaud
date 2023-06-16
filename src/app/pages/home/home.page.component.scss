@@ -1,0 +1,58 @@
+h1, h4 {
+    margin: 0;
+    padding: 0;
+}
+
+:host {
+    display: block;
+    background-color: #00BF7D;
+    height: 100%;
+    width: 100%;
+}
+
+.loading-section {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.title-box {
+    color: #F2FFDF;
+    text-align: center;
+    font-family: "Passero One", sans-serif;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+#title {
+    font-size: 4rem;
+    padding: 6rem 0 2rem 0;
+}
+
+#catchphrase {
+    font-size: 1.5rem;
+    padding: 0 0 2rem 0;
+}
+
+.img-box {
+    margin-top: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+.loading-image {
+    animation: moveUpDown 5s ease-in-out infinite;
+}
+
+@keyframes moveUpDown {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+}
