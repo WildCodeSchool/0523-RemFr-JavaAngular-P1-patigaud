@@ -12,33 +12,34 @@ export class HomePageComponent implements OnInit {
   locations!: Location[];
   isLoading = true;
   loadingImg = './assets/loadingImg.png'
-  test:any;
-  dede:any;
-
+  users: any[] = [];
+  userPseudo: any = "";
+  userFromDb: any;
+  retrievedUser: any;
   constructor(private apiGardenService: ApiGardenService, public userService: UserService) { }
 
   ngOnInit() {
     this.getLocations();
-  
-  
+
+    this.userService.getConnectedUser()
+      .subscribe((data: any) => {
+        this.users = data;
+        this.userPseudo = localStorage.getItem('pseudo');
+        this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.userPseudo.toLowerCase());
+        this.retrievedUser = this.userFromDb;
+      })
   }
 
-  getLocations() {   
-    this.test = localStorage.getItem('pseudo');
-    console.log(this.test);
-   console.log(this.userService.getConnectedUser())
-    
-
+  getLocations() {
     this.apiGardenService.getGardenList().subscribe((response) => {
       this.locations = response;
       this.simulateMinimumLoadingTime();
     });
-  
   }
 
   simulateMinimumLoadingTime() {
-    setTimeout(() => { 
-      this.isLoading = false;       
+    setTimeout(() => {
+      this.isLoading = false;
     }, 5000);
   }
 

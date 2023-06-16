@@ -16,7 +16,7 @@ export class AddUserComponent implements OnInit {
   users: User[] = [];
   userFromDb: any;
   connectedUser: User = {}
-  constructor(private userService: UserService, private router : Router) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
@@ -24,20 +24,20 @@ export class AddUserComponent implements OnInit {
 
   saveUser(): void {
     this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.user.pseudo.toLowerCase());
-    if(this.userFromDb) {
-           alert(`Utilisateur reconnu, vous allez être connecté en tant que ${this.userFromDb.pseudo}, 
+    if (this.userFromDb) {
+      alert(`Utilisateur reconnu, vous allez être connecté en tant que ${this.userFromDb.pseudo}, 
      avec le genre ${this.userFromDb.gender} et l'id ${this.userFromDb.key}`);
-     this.userService.setConnectedUser(this.userFromDb);
-     localStorage.setItem('pseudo',this.userFromDb.pseudo);
-     console.log(localStorage.getItem('key'))
-     this.router.navigate(['']);
+
+      localStorage.setItem('pseudo', this.userFromDb.pseudo);
+      this.router.navigate(['']);
     }
-  else {
-    const createdUserKey = this.userService.create(this.user);
-    this.user.key = createdUserKey;
+    else {
+      const createdUserKey = this.userService.create(this.user);
+      this.user.key = createdUserKey;
       alert(`user created, vous allez être connecté en tant que ${this.user.pseudo}, 
       avec le genre ${this.user.gender} et l'id ${this.user.key}`);
-      this.userService.setConnectedUser(this.user);
+      localStorage.setItem('pseudo', this.userFromDb.pseudo);
+
       this.router.navigate(['']);
     };
   }
@@ -53,5 +53,5 @@ export class AddUserComponent implements OnInit {
       ).subscribe(data => {
         this.users = data;
       })
-    }
+  }
 }
