@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiGardenService } from 'src/app/services/api-gardens.service';
-import { Observable } from 'rxjs';
+import { Observable, interval, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export class Pois {
   public poiname: any;
@@ -23,12 +24,15 @@ export class Pois {
 
 export class GeolocSpoofComponent implements OnInit {
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
   constructor(private apiGardenService: ApiGardenService) { }
   // mylat: any = 47.3898761399 // y
   // mylong: any = 0.734590886881 // x
   mylat: any = 47.3806797848 // y
   mylong: any = 0.70160855649 // x
   locations: any
+  markerToAdd: any
 
   dynamicSort(property: any) {
     var sortOrder = 1;
@@ -57,6 +61,39 @@ export class GeolocSpoofComponent implements OnInit {
     return d * 1000; // meters
   }
 
+  createCloudPoints(): void{
+    // let cloudPointsArray: any = []
+    // for(let i = 1;i < 50; i++) {
+    //   //let modifier = (i*3) / 10000
+    //   let modifier = i / 10000
+    //   let newarrayPlusXOne = [this.mylong + modifier,this.mylat]
+    //   let newarrayMinusXOne = [this.mylong - modifier,this.mylat]
+    //   let newarrayPlusYOne = [this.mylong,this.mylat + modifier]
+    //   let newarrayMinusYOne = [this.mylong,this.mylat - modifier]
+    //   let newarrayMinusXMinusY = [this.mylong - modifier,this.mylat - modifier]
+    //   let newarrayMinusXPlusY = [this.mylong - modifier,this.mylat + modifier]
+    //   let newarrayPlusXMinusY = [this.mylong + modifier,this.mylat - modifier]
+    //   let newarrayPlusXPlusY = [this.mylong + modifier,this.mylat + modifier] 
+    //   cloudPointsArray.push(newarrayPlusXOne)
+    //   cloudPointsArray.push(newarrayMinusXOne)
+    //   cloudPointsArray.push(newarrayPlusYOne)
+    //   cloudPointsArray.push(newarrayMinusYOne)
+    //   cloudPointsArray.push(newarrayMinusXMinusY)
+    //   cloudPointsArray.push(newarrayMinusXPlusY)
+    //   cloudPointsArray.push(newarrayPlusXMinusY)
+    //   cloudPointsArray.push(newarrayPlusXPlusY)
+    // }
+    // this.markerToAdd = cloudPointsArray
+  }
+
+
+  logMessageEvery5Seconds() {
+    interval(5000).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
+      console.log('Does it work, and how long ?');
+    });
+  }
 
   distanceTwoDim(x: number,y: number,u: number,w: number) {
     let a = x - u
@@ -65,11 +102,12 @@ export class GeolocSpoofComponent implements OnInit {
   }
 
   checkMyLoc(locationsArray: any) {
+    let cloudPointsArray: any = []
     let poiarray = []
     for(let poi of locationsArray) {
       //console.log(poi.shape[0])
       if ( (Math.abs(this.mylat - poi.geoPoint[1]) < 0.0001) && (Math.abs(this.mylong - poi.geoPoint[0]) < 0.0001) ) {
-        console.log(`Yipee we are close to ${poi.address}`)
+        //console.log(`Yipee we are close to ${poi.address}`)
       }
       let dist = this.haversineLaw(this.mylat,this.mylong,poi.geoPoint[1],poi.geoPoint[0])  
       let distTwo = this.distanceTwoDim(this.mylat,this.mylong,poi.geoPoint[1],poi.geoPoint[0]) * 80000
@@ -82,10 +120,10 @@ export class GeolocSpoofComponent implements OnInit {
     poiarray.sort(this.dynamicSort("dist"))
     //console.log(poiarray)
     for(let poi of poiarray) {
-      console.log(`${poi.poiname} est situé à haversinelaw: ${poi.dist} m / distance2d: ${poi.distTwo} `)  
+      //console.log(`${poi.poiname} est situé à haversinelaw: ${poi.dist} m / distance2d: ${poi.distTwo} `)  
       let newarray = [this.mylong,this.mylat]    
       if (poi.shape && (this.getIsPointInsidePolygon(newarray, poi.shape[0]))) {
-        console.log(`we are inside ${poi.poiname}`) // ${poi.address}
+        //console.log(`we are inside ${poi.poiname}`) // ${poi.address}
       } 
       for(let i = 1;i < 50; i++) {
         //let modifier = (i*3) / 10000
@@ -97,43 +135,61 @@ export class GeolocSpoofComponent implements OnInit {
         let newarrayMinusXMinusY = [this.mylong - modifier,this.mylat - modifier]
         let newarrayMinusXPlusY = [this.mylong - modifier,this.mylat + modifier]
         let newarrayPlusXMinusY = [this.mylong + modifier,this.mylat - modifier]
-        let newarrayPlusXPlusY = [this.mylong + modifier,this.mylat + modifier]         
+        let newarrayPlusXPlusY = [this.mylong + modifier,this.mylat + modifier]
+        
+    //   cloudPointsArray.push(newarrayPlusXOne)
+    //   cloudPointsArray.push(newarrayMinusXOne)
+    //   cloudPointsArray.push(newarrayPlusYOne)
+    //   cloudPointsArray.push(newarrayMinusYOne)
+    //   cloudPointsArray.push(newarrayMinusXMinusY)
+    //   cloudPointsArray.push(newarrayMinusXPlusY)
+    //   cloudPointsArray.push(newarrayPlusXMinusY)
+    //   cloudPointsArray.push(newarrayPlusXPlusY)
+        
+
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayPlusXOne, poi.shape[0]))) {
-          console.log(`we are inside x+${+i} ${poi.poiname} with lat ${newarrayPlusXOne[0]} and long ${newarrayPlusXOne[1]}`) 
+          //console.log(`we are inside x+${+i} ${poi.poiname} with lat ${newarrayPlusXOne[0]} and long ${newarrayPlusXOne[1]}`) 
+          cloudPointsArray.push(newarrayPlusXOne)
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayMinusXOne, poi.shape[0]))) {
-          console.log(`we are inside x${-i} ${poi.poiname} with lat ${newarrayMinusXOne[0]} and long ${newarrayMinusXOne[1]}`) 
+          //console.log(`we are inside x${-i} ${poi.poiname} with lat ${newarrayMinusXOne[0]} and long ${newarrayMinusXOne[1]}`)
+          cloudPointsArray.push(newarrayMinusXOne) 
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayPlusYOne, poi.shape[0]))) {
-          console.log(`we are inside y${+i} ${poi.poiname} with lat ${newarrayPlusYOne[0]} and long ${newarrayPlusYOne[1]}`) 
+          //console.log(`we are inside y${+i} ${poi.poiname} with lat ${newarrayPlusYOne[0]} and long ${newarrayPlusYOne[1]}`) 
+          cloudPointsArray.push(newarrayPlusYOne)
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayMinusYOne, poi.shape[0]))) {
-          console.log(`we are inside y${-i} ${poi.poiname} with lat ${newarrayMinusYOne[0]} and long ${newarrayMinusYOne[1]}`) 
+          //console.log(`we are inside y${-i} ${poi.poiname} with lat ${newarrayMinusYOne[0]} and long ${newarrayMinusYOne[1]}`)
+          cloudPointsArray.push(newarrayMinusYOne) 
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayMinusXMinusY, poi.shape[0]))) {
-          console.log(`we are inside x-${i} y-${i} ${poi.poiname} with lat ${newarrayMinusXMinusY[0]} and long ${newarrayMinusXMinusY[1]}`) 
+          //console.log(`we are inside x-${i} y-${i} ${poi.poiname} with lat ${newarrayMinusXMinusY[0]} and long ${newarrayMinusXMinusY[1]}`)
+          cloudPointsArray.push(newarrayMinusXMinusY) 
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayMinusXPlusY, poi.shape[0]))) {
-          console.log(`we are inside x-${i} y+${i} ${poi.poiname} with lat ${newarrayMinusXPlusY[0]} and long ${newarrayMinusXPlusY[1]}`) 
+          //console.log(`we are inside x-${i} y+${i} ${poi.poiname} with lat ${newarrayMinusXPlusY[0]} and long ${newarrayMinusXPlusY[1]}`)
+          cloudPointsArray.push(newarrayMinusXPlusY) 
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayPlusXMinusY, poi.shape[0]))) {
-          console.log(`we are inside x+${i} y-${i} ${poi.poiname} with lat ${newarrayPlusXMinusY[0]} and long ${newarrayPlusXMinusY[1]}`) 
+          //console.log(`we are inside x+${i} y-${i} ${poi.poiname} with lat ${newarrayPlusXMinusY[0]} and long ${newarrayPlusXMinusY[1]}`) 
+          cloudPointsArray.push(newarrayPlusXMinusY)
         }
         if (poi.shape && (this.getIsPointInsidePolygon(newarrayPlusXPlusY, poi.shape[0]))) {
-          console.log(`we are inside x+${i} y+${i} ${poi.poiname} with lat ${newarrayPlusXPlusY[0]} and long ${newarrayPlusXPlusY[1]}`) 
+          //console.log(`we are inside x+${i} y+${i} ${poi.poiname} with lat ${newarrayPlusXPlusY[0]} and long ${newarrayPlusXPlusY[1]}`) 
+          cloudPointsArray.push(newarrayPlusXPlusY)
         }
-
-
       }
     }
-
+    this.markerToAdd = cloudPointsArray
+    //console.log(this.markerToAdd)
   }
 
   getLocations() {
     this.apiGardenService.getGardenList()
     .subscribe((response) => {
       this.locations = response
-      console.log(response)
+      //console.log(response)
       this.checkMyLoc(response)
     })
   }
@@ -156,9 +212,17 @@ export class GeolocSpoofComponent implements OnInit {
     }
     
     return inside
-  }  
+  } 
 
   ngOnInit(): void {
     this.getLocations();
+    this.createCloudPoints();
+    this.logMessageEvery5Seconds();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    console.log("geoloc spoof destroyed")
   }
 }
