@@ -1,4 +1,4 @@
-import { NgModule, getPlatform } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import {FirstPageComponent} from './pages/first/first.page.component';

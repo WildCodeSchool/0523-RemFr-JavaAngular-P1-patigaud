@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import * as L from "leaflet";
 import { ApiGardenService } from "src/app/services/api-gardens.service";
 import { GeolocService } from "src/app/services/geoloc.service";
 import { Location } from "../../location";
 import { NumberValueAccessor } from "@angular/forms";
-import { Observable, interval, Subject } from 'rxjs';
+import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -12,13 +12,14 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: "./map.component.html",
   styleUrls: ["./map.component.scss"],
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
   private map!: L.Map;
   locations!: Location[];
   status = "loading";
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private myLong: number = 0;
-  private myLat: number = 0;  
+  private myLong = 0;
+  private myLat = 0; 
+  private myPosMarker!: L.Marker; 
 
   constructor(private apiGardenService: ApiGardenService, private GeolocService: GeolocService) {}
 
@@ -33,20 +34,20 @@ export class MapComponent implements OnInit {
     this.unsubscribe$.complete();
   }  
   
-  private myPosMarker: any;
+  
 
   updateMyPosEvery5Sec() {
     interval(3000).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(() => {
-      this.UpdateMyPosMarker()
+      this.updateMyPosMarker()
       if (this.locations && this.myLong && this.myLat) {
         this.GeolocService.checkMyLoc(this.locations, this.myLat, this.myLong)
       }
     });
   }
 
-  UpdateMyPosMarker() {
+  updateMyPosMarker() {
     this.GeolocService.getCurrentPosition().subscribe({
       next: (coords: any) => {
         if (this.myPosMarker != undefined) {
