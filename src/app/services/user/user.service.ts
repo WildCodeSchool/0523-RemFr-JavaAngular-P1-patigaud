@@ -25,8 +25,9 @@ export class UserService {
   }
 
   create(user: User): any {
-    return this.userRef.push(user);
-  }
+    const test = this.userRef.push(user);
+    const key = test.key;
+    return key  }
 
   update(key: any, value: any): Promise<void> {
     return this.userRef.update(key, value);

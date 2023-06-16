@@ -28,8 +28,10 @@ export class AddUserComponent implements OnInit {
       //TODO : launch app with this user
     }
   else {
-      this.userService.create(this.user);
-      alert('user created');
+    const createdUserKey = this.userService.create(this.user);
+    this.user.key = createdUserKey;
+      alert(`user created, vous allez être connecté en tant que ${this.user.pseudo}, 
+      avec le genre ${this.user.gender} et l'id ${this.user.key}`);
       //TODO : launch app with new User
     };
   }
