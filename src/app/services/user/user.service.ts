@@ -12,9 +12,9 @@ export class UserService {
   private dbPath = '/user';
 
   userRef: AngularFireList<User>;
-    reference:any;
-    id: any;
-    users: User[] = []; 
+  reference: any;
+  id: any;
+  users: User[] = [];
 
   constructor(private db: AngularFireDatabase) {
     this.userRef = db.list(this.dbPath);
@@ -25,7 +25,9 @@ export class UserService {
   }
 
   create(user: User): any {
-    return this.userRef.push(user);
+    const test = this.userRef.push(user);
+    const key = test.key;
+    return key
   }
 
   update(key: any, value: any): Promise<void> {
