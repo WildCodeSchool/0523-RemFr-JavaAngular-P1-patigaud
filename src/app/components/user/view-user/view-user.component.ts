@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
@@ -19,7 +19,7 @@ export class ViewUserComponent {
   users: any;
   allUsers: any;
 
-  constructor(private userService: UserService, private activatedRoute: ActivatedRoute) { }
+  constructor(private userService: UserService, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): any {
     this.retrieveUsers();
@@ -67,6 +67,11 @@ export class ViewUserComponent {
         .then(() => this.message = 'The user was updated successfully!')
         .catch(err => console.log(err));
     }
+  }
+
+  disconnectUser(): void {
+    localStorage.clear();console.log(this.currentUser);
+    this.router.navigate(['/']);
   }
 
   deleteUser(): void {

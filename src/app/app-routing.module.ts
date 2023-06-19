@@ -12,10 +12,10 @@ import { UsersListComponent } from './components/user/users-list/users-list.comp
 
 const routes: Routes = [
   {
-    path: 'first', component: FirstPageComponent
+    path: '', component: FirstPageComponent
   },
   {
-    path: '', component: HomePageComponent
+    path: 'home', component: HomePageComponent
   },
   {
     path: 'patidex', component: PatidexPageComponent
