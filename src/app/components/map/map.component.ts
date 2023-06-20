@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import { Location } from "../../location";
 import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 import { MapService } from "src/app/services/map/map.service";
+import { Component, OnInit } from "@angular/core";
 
 
 @Component({
@@ -19,6 +19,7 @@ export class MapComponent implements OnInit {
   private readonly DEFAULT_ZOOM: number = 13;
   private readonly DEFAULT_MAX_ZOOM: number = 19;
   private readonly DEFAULT_MIN_ZOOM: number = 6;
+  
   
   constructor(private apiGardenService: ApiGardenService, private MapService: MapService) { }
 
@@ -52,7 +53,6 @@ export class MapComponent implements OnInit {
         `);
     });
   }
-
   initMap(): void {
     this.map = L.map("map", {
       maxBounds: this.DEFAULT_MAX_BOUND,
