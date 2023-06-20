@@ -1,5 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
+import { Injectable } from '@angular/core';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { map } from 'rxjs';
 import { User } from 'src/app/models/user';
 
@@ -12,9 +12,12 @@ export class UserService {
   private dbPath = '/user';
 
   userRef: AngularFireList<User>;
-    reference:any;
-    id: any;
-    users: User[] = []; 
+  reference: any;
+  id: any;
+  users: any[] = [];
+
+  public connectedUser!: string | null;
+
 
   constructor(private db: AngularFireDatabase) {
     this.userRef = db.list(this.dbPath);
@@ -25,7 +28,9 @@ export class UserService {
   }
 
   create(user: User): any {
-    return this.userRef.push(user);
+    const test = this.userRef.push(user);
+    const key = test.key;
+    return key
   }
 
   update(key: any, value: any): Promise<void> {
@@ -38,5 +43,16 @@ export class UserService {
 
   deleteAll(): Promise<void> {
     return this.userRef.remove();
+  }
+
+  public getConnectedUser(): any {
+    return this.userRef.snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      )
   }
 }
