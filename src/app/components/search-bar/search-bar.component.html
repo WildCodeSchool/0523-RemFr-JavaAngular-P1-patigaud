@@ -6,6 +6,7 @@
     <div class="result-container" *ngFor="let result of searchResults" (click)="goToLocation(result)">
       <div class="result-address">{{ result.address }}</div>
       <div class="result-city">{{ result.city }}, {{result.postalCode}}</div>
+      
     </div>
   </div>
   <select name="city" id="city" [(ngModel)]="city" (click)="optionsForTheCity()" (ngModelChange)="filterByCity()" size="1">
