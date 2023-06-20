@@ -1,0 +1,45 @@
+:host {
+    background-color: #98BF64;
+    display: block;
+    height: 100vh;
+}
+
+.card_container {
+    margin-top: 2rem;
+    display: flex;
+    width: 100vw;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card {
+    width: 48%;
+    text-align: center;
+    color: #F2FFDF;
+    font-family: Passero One;
+}
+
+.infos_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image {
+    width: 80%;
+}
+
+.image img {
+    max-width: 100%;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
+}
+
+.grey {
+   filter: grayscale(100%);
+}
+
+.description {
+    width: 90%;
+}

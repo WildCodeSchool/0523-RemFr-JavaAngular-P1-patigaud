@@ -33,6 +33,7 @@ ul {
     flex-direction: column;
     align-items: center;
     border: 2px solid #F2FFDF;
+    filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 25%));
   }
 
 .image {
@@ -51,7 +52,7 @@ ul {
     background-color: rgba(56, 56, 56, 0.5);
     color: #F2FFDF;
     width: 100%;
-    height: 25%;
+    height: 40%;
     display: flex;
     align-items: center;
 }
