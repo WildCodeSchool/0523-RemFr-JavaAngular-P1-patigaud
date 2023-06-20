@@ -4,12 +4,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { MapService } from "src/app/services/map/map.service";
 import * as L from "leaflet";
 
-interface optionsForFilters {
-  optionsCity: Array<string>;
-  optionsPostalCode: Array<number>;
-  optionsStructure: Array<string>;
-}
-
 @Component({
   selector: "app-search-bar",
   templateUrl: "./search-bar.component.html",
@@ -30,7 +24,14 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   isFocused = false;
   itHasBeenReversed = false;
   city: string = '';
-  allCities: string[] = [];
+  postalCode: number = 0;
+  structure: string = '';
+  test: any;
+  optionsFilters = {
+    optionsCity: Array<string>(),
+    optionsPostalCode: Array<string>(),
+    optionsStructure: Array<string>(),
+  }
   result: any;
   isOptionsLoaded: boolean = false;
   private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
@@ -49,7 +50,7 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   ngAfterViewInit() {
     this.map = this.mapService.getMap()
     if (this.mapService.isLoaded) {
-      this.optionsForTheCity();
+      this.optionsForTheFilters();
     }
   }
 
@@ -84,6 +85,9 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
 
   goToLocation(location: Location) {
     this.inputText = '';
+    if (this.test !== ""){
+      this.selectOption('');
+    }
     this.searchResults = [];
     this.isFocused = false;
     const geopoint: number[] | any = location.geoPoint;
@@ -108,16 +112,21 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   }
   
 
-  optionsForTheCity(optionsForFilters: optionsForFilters = { optionsCity: [], optionsPostalCode: [], optionsStructure: [] }) {
+  optionsForTheFilters() {
     this.locations.forEach((location: Location) => {
-      if (!this.allCities.includes(location.city)) {
-        optionsForFilters.optionsCity.push(location.city);
-        this.allCities.push(location.city);
-        this.allCities.sort();
+      if (!this.optionsFilters.optionsCity.includes(location.city)) {
+        this.optionsFilters.optionsCity.push(location.city);
+        this.optionsFilters.optionsCity.sort();
+      }
+      if (!this.optionsFilters.optionsPostalCode.includes(location.postalCode.toString())) {
+        this.optionsFilters.optionsPostalCode.push(location.postalCode.toString());
+        this.optionsFilters.optionsPostalCode.sort();
+      }
+      if (!this.optionsFilters.optionsStructure.includes(location.structure)) {
+        this.optionsFilters.optionsStructure.push(location.structure);
+        this.optionsFilters.optionsStructure.sort();
       }
     });
-    new Set(optionsForFilters.optionsCity = this.allCities);
-    this.locations.forEach((location: Location) => {});
   }
 
   buildPopup(object: any) {
@@ -135,26 +144,35 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
     }
   }
 
-  filterByCity() {
-    const filteredLocations = this.locations.filter((location: Location) => location.city === this.city);
+  filterTheMap() {
+    const filteredLocations = this.locations.filter((location: Location) => {
+      return location.city === this.test || 
+      location.postalCode === this.test ||
+      location.structure === this.test
+    });
   
-    const previousCity = this.city;  
-    if (previousCity !== this.city) {
+    const previousCity = this.test;  
+    if (previousCity !== this.test) {
       this.map.eachLayer((layer: any) => {
         if (layer instanceof L.Marker) this.map.removeLayer(layer);
         if (layer instanceof L.Polygon) this.map.removeLayer(layer);
       });
     }
   
-    if (this.city === "") {
+    if (this.test === "") {
       this.buildMarkers(this.locations);
-    } else {
+    } else if (this.test !== "") {
       this.buildMarkers(filteredLocations);
     }
   
     if (previousCity !== this.city) {
       this.searchLocations();
     }
+  }
+
+  selectOption(text: any) {
+    this.test = text;
+    this.filterTheMap();
   }
   
   

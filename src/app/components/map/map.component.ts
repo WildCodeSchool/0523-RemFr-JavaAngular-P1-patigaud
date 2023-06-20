@@ -42,7 +42,6 @@ export class MapComponent implements OnInit {
       const shape: number[] | undefined = location?.shape;
       if (shape && Array.isArray(shape) && Array.isArray(shape[0])) {
         const coordinatesReversed = shape[0].map((coords) => [coords[1], coords[0]]);
-        console.log(coordinatesReversed, "map");
         L.polygon(coordinatesReversed, {
           color: "lightgreen",
         }).addTo(this.map);
