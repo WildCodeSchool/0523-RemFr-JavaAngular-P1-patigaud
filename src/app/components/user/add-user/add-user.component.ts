@@ -16,9 +16,8 @@ export class AddUserComponent implements OnInit {
   users: User[] = [];
   userFromDb: any;
   connectedUser: User = {}
-  storedUser: any;
   connectedUserPseudo: any = "";
-  retrievedUser: any;
+  freshlyConnectedUser: boolean = false;
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
@@ -28,32 +27,29 @@ export class AddUserComponent implements OnInit {
       .subscribe((data: any) => {
         this.users = data;
         this.connectedUserPseudo = localStorage.getItem('pseudo');
-        this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
-        if (this.userFromDb.pseudo === this.connectedUserPseudo) {
-          alert(`Utilisateur déjà connecté en tant que ${this.userFromDb.pseudo}, 
-      avec le genre ${this.userFromDb.gender} et l'id ${this.userFromDb.key}`);
-          this.router.navigate(['home']);
+        if (this.connectedUserPseudo != null) {
+          this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
+          if (this.userFromDb != null && this.userFromDb.pseudo === this.connectedUserPseudo) {
+            localStorage.setItem('freshlyConnectedUser', 'true'); 
+            this.router.navigate(['home']);
+          }
         }
       })
   }
 
   connectUser(): void {
     this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.user.pseudo.toLowerCase());
-
     if (this.userFromDb) {
-      alert(`Utilisateur reconnu, vous allez être connecté en tant que ${this.userFromDb.pseudo}, 
-     avec le genre ${this.userFromDb.gender} et l'id ${this.userFromDb.key}`);
-
       localStorage.setItem('pseudo', this.userFromDb.pseudo);
+      localStorage.setItem('freshlyConnectedUser', 'true');
+      
       this.router.navigate(['home']);
     }
     else {
       const createdUserKey = this.userService.create(this.user);
       this.user.key = createdUserKey;
-      alert(`user created, vous allez être connecté en tant que ${this.user.pseudo}, 
-      avec le genre ${this.user.gender} et l'id ${this.user.key}`);
       localStorage.setItem('pseudo', this.user.pseudo);
-
+      localStorage.setItem('freshlyConnectedUser', 'true');
       this.router.navigate(['home']);
     };
   }

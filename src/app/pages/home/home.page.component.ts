@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '../../location';
 import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,8 @@ export class HomePageComponent implements OnInit {
   userPseudo: any = "";
   userFromDb: any;
   retrievedUser: any;
-  constructor(private apiGardenService: ApiGardenService, public userService: UserService) { }
+  freshlyConnectedUser?: string | null;
+  constructor(private apiGardenService: ApiGardenService, public userService: UserService, private router: Router) { }
 
   ngOnInit() {
     this.getLocations();
@@ -38,9 +40,18 @@ export class HomePageComponent implements OnInit {
   }
 
   simulateMinimumLoadingTime() {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 5000);
+    this.freshlyConnectedUser = localStorage.getItem('freshlyConnectedUser');
+
+    if (this.freshlyConnectedUser === 'true') {
+      setTimeout(() => {
+        this.isLoading = false;
+        localStorage.setItem('freshlyConnectedUser', 'false');
+      }, 5000);
+    } else {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 0);
+    }
   }
 
 }

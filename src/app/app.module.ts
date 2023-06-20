@@ -20,12 +20,10 @@ import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
 import { TestlocComponent } from './components/testloc/testloc.component';
 import { AddUserComponent } from './components/user/add-user/add-user.component';
-import { EditUserComponent } from './components/user/edit-user/edit-user.component';
 import { ViewUserComponent } from './components/user/view-user/view-user.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../app/environments/environment'
-import { UsersListComponent } from './components/user/users-list/users-list.component';
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FormsModule } from "@angular/forms"; 
@@ -47,10 +45,8 @@ import { FormsModule } from "@angular/forms";
     MapComponent,
     TestlocComponent,
     AddUserComponent,
-    EditUserComponent,
     ViewUserComponent,
     SearchBarComponent,
-    UsersListComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { User } from 'src/app/models/user';
@@ -11,20 +11,17 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class ViewUserComponent {
   currentUser: User = {
+    key: '',
     pseudo: '',
     gender: '',
   };
-  message = '';
   sub: any;
   users: any;
-  allUsers: any;
 
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): any {
     this.retrieveUsers();
-
-    this.message = '';
   }
 
   retrieveUsers(): void {
@@ -52,25 +49,8 @@ export class ViewUserComponent {
       })
   }
 
-  ngOnChanges(): void {
-    this.message = '';
-  }
-
-  updateUser(): void {
-    const data = {
-      pseudo: this.currentUser.pseudo,
-      gender: this.currentUser.gender
-    };
-
-    if (this.currentUser.key) {
-      this.userService.update(this.currentUser.key, data)
-        .then(() => this.message = 'The user was updated successfully!')
-        .catch(err => console.log(err));
-    }
-  }
-
   disconnectUser(): void {
-    localStorage.clear();console.log(this.currentUser);
+    localStorage.clear();
     this.router.navigate(['/']);
   }
 
@@ -78,10 +58,11 @@ export class ViewUserComponent {
     if (this.currentUser.key) {
       this.userService.delete(this.currentUser.key)
         .then(() => {
-          this.message = 'The user was updated successfully!';
           this.currentUser.key = "";
           this.currentUser.pseudo = "";
           this.currentUser.gender = "";
+          localStorage.clear();
+          this.router.navigate(['/']);
         })
         .catch(err => console.log(err));
     }
