@@ -3,6 +3,7 @@ import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
 import { FormsModule } from '@angular/forms';
 import { map } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',
@@ -14,25 +15,42 @@ export class AddUserComponent implements OnInit {
   user: any = new User();
   users: User[] = [];
   userFromDb: any;
-  constructor(private userService: UserService) { }
+  connectedUser: User = {}
+  connectedUserPseudo: any = "";
+  freshlyConnectedUser: boolean = false;
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+    //Get connected user from local storage and by-pass login page if already connected
+    this.userService.getConnectedUser()
+      .subscribe((data: any) => {
+        this.users = data;
+        this.connectedUserPseudo = localStorage.getItem('pseudo');
+        if (this.connectedUserPseudo != null) {
+          this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
+          if (this.userFromDb != null && this.userFromDb.pseudo === this.connectedUserPseudo) {
+            localStorage.setItem('freshlyConnectedUser', 'true'); 
+            this.router.navigate(['home']);
+          }
+        }
+      })
   }
 
-  saveUser(): void {
+  connectUser(): void {
     this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.user.pseudo.toLowerCase());
-    if(this.userFromDb) {
-           alert(`Utilisateur reconnu, vous allez être connecté en tant que ${this.userFromDb.pseudo}, 
-     avec le genre ${this.userFromDb.gender} et l'id ${this.userFromDb.key}`);
-      //TODO : launch app with this user
+    if (this.userFromDb) {
+      localStorage.setItem('pseudo', this.userFromDb.pseudo);
+      localStorage.setItem('freshlyConnectedUser', 'true');
+      
+      this.router.navigate(['home']);
     }
-  else {
-    const createdUserKey = this.userService.create(this.user);
-    this.user.key = createdUserKey;
-      alert(`user created, vous allez être connecté en tant que ${this.user.pseudo}, 
-      avec le genre ${this.user.gender} et l'id ${this.user.key}`);
-      //TODO : launch app with new User
+    else {
+      const createdUserKey = this.userService.create(this.user);
+      this.user.key = createdUserKey;
+      localStorage.setItem('pseudo', this.user.pseudo);
+      localStorage.setItem('freshlyConnectedUser', 'true');
+      this.router.navigate(['home']);
     };
   }
 
