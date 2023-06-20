@@ -8,4 +8,8 @@
       <div class="result-city">{{ result.city }}, {{result.postalCode}}</div>
     </div>
   </div>
+  <select name="city" id="city" [(ngModel)]="city" (click)="optionsForTheCity()" (ngModelChange)="filterByCity()" size="1">
+    <option value=""></option>
+    <option *ngFor="let result of allCities">{{result}}</option>
+  </select>
 </div>

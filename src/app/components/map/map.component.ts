@@ -40,12 +40,13 @@ export class MapComponent implements OnInit {
       const geopoint: number[] | any = location.geoPoint;
       const shape: number[] | undefined = location?.shape;
       if (shape && Array.isArray(shape) && Array.isArray(shape[0])) {
-        const coordinatesReversed = shape[0].map((coords) => coords.reverse());
+        const coordinatesReversed = shape[0].map((coords) => [coords[1], coords[0]]);
+        console.log(coordinatesReversed, "map");
         L.polygon(coordinatesReversed, {
           color: "lightgreen",
         }).addTo(this.map);
       }
-      L.marker(geopoint.reverse(), { icon: this.myIcon }).addTo(this.map)
+      L.marker(geopoint, { icon: this.myIcon }).addTo(this.map)
         .bindPopup(`
         ${location.address} <br> ${location.city}, ${location.postalCode}<br>
         Taille en m²: ${location.area}m²

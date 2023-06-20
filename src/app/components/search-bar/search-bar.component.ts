@@ -1,8 +1,14 @@
-import { Component, Input, HostListener, AfterViewInit } from "@angular/core";
+import { Component, Input, HostListener, AfterViewInit, AfterViewChecked, AfterContentChecked } from "@angular/core";
 import { Location } from "../../location";
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MapService } from "src/app/services/map/map.service";
 import * as L from "leaflet";
+
+interface optionsForFilters {
+  optionsCity: Array<string>;
+  optionsPostalCode: Array<number>;
+  optionsStructure: Array<string>;
+}
 
 @Component({
   selector: "app-search-bar",
@@ -16,13 +22,17 @@ import * as L from "leaflet";
     ]),
   ],
 })
-export class SearchBarComponent implements AfterViewInit {
+export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   @Input() locations!: Location[];
   searchResults: Location[] = [];
   map!: L.Map;
   inputText = '';
   isFocused = false;
   itHasBeenReversed = false;
+  city: string = '';
+  allCities: string[] = [];
+  result: any;
+  isOptionsLoaded: boolean = false;
   private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
 
   constructor(private mapService: MapService) { }
@@ -37,13 +47,13 @@ export class SearchBarComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.map = this.mapService.getMap();
+    this.map = this.mapService.getMap()
+    if (this.mapService.isLoaded) {
+      this.optionsForTheCity();
+    }
   }
 
-  locationsReverse() {
-    this.locations.forEach((location: Location) => {
-      location.geoPoint.reverse();
-    });
+  ngAfterContentChecked() {
   }
 
   onInput(event: any) {
@@ -54,9 +64,6 @@ export class SearchBarComponent implements AfterViewInit {
   toggleFocus(event: Event) {
     event.stopPropagation();
     this.isFocused = true;
-    if (!this.itHasBeenReversed) {
-      this.locationsReverse();
-    }
     this.itHasBeenReversed = true;
   }
 
@@ -88,4 +95,72 @@ export class SearchBarComponent implements AfterViewInit {
     this.map.flyTo(geopoint, this.DEFAULT_MAP_ZOOM_FLYTO);
     setTimeout(() => this.map.openPopup(popup), 400);
   }
+
+  buildMarkers(markers: any) {
+    this.map.eachLayer((layer: any) => {
+      if (layer instanceof L.Marker) this.map.removeLayer(layer);
+      if (layer instanceof L.Polygon) this.map.removeLayer(layer);
+    });
+  
+    for (let marker of markers) {
+      this.buildPopup(marker);
+    }
+  }
+  
+
+  optionsForTheCity(optionsForFilters: optionsForFilters = { optionsCity: [], optionsPostalCode: [], optionsStructure: [] }) {
+    this.locations.forEach((location: Location) => {
+      if (!this.allCities.includes(location.city)) {
+        optionsForFilters.optionsCity.push(location.city);
+        this.allCities.push(location.city);
+        this.allCities.sort();
+      }
+    });
+    new Set(optionsForFilters.optionsCity = this.allCities);
+    this.locations.forEach((location: Location) => {});
+  }
+
+  buildPopup(object: any) {
+    const popupContent = `
+      ${object.address} <br> ${object.city}, ${object.postalCode}<br>
+      Taille en m²: ${object.area}m²
+    `;
+    L.marker(object.geoPoint, this.myIcon).addTo(this.map).bindPopup(popupContent);
+    if (object.shape && Array.isArray(object.shape) && Array.isArray(object.shape[0])) {
+      const coordinatesReversed = object.shape[0].map((coords) => coords);
+      this.result = coordinatesReversed.map((coords) => [coords[1], coords[0]]);
+      L.polygon(this.result, {
+        color: "lightgreen",
+      }).addTo(this.map);
+    }
+  }
+
+  filterByCity() {
+    const filteredLocations = this.locations.filter((location: Location) => location.city === this.city);
+  
+    const previousCity = this.city;  
+    if (previousCity !== this.city) {
+      this.map.eachLayer((layer: any) => {
+        if (layer instanceof L.Marker) this.map.removeLayer(layer);
+        if (layer instanceof L.Polygon) this.map.removeLayer(layer);
+      });
+    }
+  
+    if (this.city === "") {
+      this.buildMarkers(this.locations);
+    } else {
+      this.buildMarkers(filteredLocations);
+    }
+  
+    if (previousCity !== this.city) {
+      this.searchLocations();
+    }
+  }
+  
+  
+  myIcon = {icon: L.icon({
+    iconUrl: "assets/maps.png",
+    iconSize: [20, 20],
+  })};
+  
 }
