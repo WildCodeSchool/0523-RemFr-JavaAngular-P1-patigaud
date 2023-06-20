@@ -28,7 +28,8 @@ import { environment } from '../app/environments/environment'
 import { UsersListComponent } from './components/user/users-list/users-list.component';
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { FormsModule } from "@angular/forms"; 
+import { FormsModule } from "@angular/forms";
+import { StatisticsComponent } from './components/statistics/statistics.component'; 
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { FormsModule } from "@angular/forms";
     EditUserComponent,
     ViewUserComponent,
     SearchBarComponent,
-    UsersListComponent
+    UsersListComponent,
+    StatisticsComponent,
   ],
   imports: [
     BrowserModule,
