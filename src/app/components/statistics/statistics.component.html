@@ -1,5 +1,5 @@
 <div class="container">
-  <header class="header">--{{ userName }}--</header>
+  <header class="header">--{{ currentUser.pseudo }}--</header>
   <div class="collection">Derniers badges débloqués</div>
   <div class="fake-badge-group">
     <div class="fake-badge"></div>
@@ -15,7 +15,7 @@
   <div class="big-square">
     <h2>Statistiques:</h2>
     <div class="statistiques">
-      <div class="km-stat">KM parcourus : {{ distance }}</div>
+      <div class="km-stat">KM parcourus : {{ currentUser.distance }}</div>
       <div class="jardin-stat">Jardins trouvés :</div>
       <div class="badge-stat">Nombre badges :</div>
       <div class="aire-stat">Aire totale trouvée :</div>

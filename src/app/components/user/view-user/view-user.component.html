@@ -1,3 +1,8 @@
+<div class="top-bar" id="top-bar">
+    <div class="user_pseudo">
+<p>{{ currentUser.pseudo }}</p>
+    </div>
+  </div>
 <div *ngIf="currentUser" class="edit-form">
     <h4>User</h4>
     <form>
@@ -32,16 +37,7 @@
     <p>user gender: {{currentUser.gender}}</p>
 
     <button class="badge badge-danger mr-2" (click)="deleteUser()">
-        Delete
+        Supprimer l'utilisateur et retourner à l'accueil
     </button>
-
-    <button type="submit" class="badge badge-success" (click)="updateUser()">
-        Update
-    </button>
-    <p>{{ message }}</p>
 </div>
-
-<div *ngIf="!currentUser">
-    <br />
-    <p>Cannot access this Tutorial...</p>
-</div>
+<button type="submit" (click)="disconnectUser()">Se déconnecter et retourner à l'accueil</button>
