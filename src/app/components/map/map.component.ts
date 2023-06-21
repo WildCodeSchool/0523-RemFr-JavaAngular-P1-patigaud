@@ -1,24 +1,19 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  AfterViewChecked,
-} from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import * as L from "leaflet";
-import { ApiGardenService } from "src/app/services/api-gardens.service";
+import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 import { GeolocService } from "src/app/services/geoloc.service";
 import { Location } from "../../location";
-import { NumberValueAccessor } from "@angular/forms";
-import { Observable, interval, Subject } from "rxjs";
+import { interval, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { MapService } from "src/app/services/map/map.service";
 
 @Component({
   selector: "app-map",
   templateUrl: "./map.component.html",
   styleUrls: ["./map.component.scss"],
 })
-export class MapComponent implements OnInit, AfterViewChecked {
+
+export class MapComponent implements OnInit {
   private map!: L.Map;
   private polygons: Map<string, L.Polygon> = new Map();
   locations!: Location[];
@@ -27,13 +22,15 @@ export class MapComponent implements OnInit, AfterViewChecked {
   private unsubscribe$: Subject<void> = new Subject<void>();
   private myLong = 0;
   private myLat = 0;
+  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667],[51.0833, 8.181]];
+  private readonly DEFAULT_MAP_COORD: L.LatLngExpression = [47.383333, 0.683333];
+  private readonly DEFAULT_ZOOM: number = 13;
+  private readonly DEFAULT_MAX_ZOOM: number = 19;
+  private readonly DEFAULT_MIN_ZOOM: number = 6;
 
   @Input() cloudPointsMarkers: any = []; //for testing purposes
 
-  constructor(
-    private apiGardenService: ApiGardenService,
-    private GeolocService: GeolocService
-  ) {}
+  constructor(private apiGardenService: ApiGardenService, private GeolocService: GeolocService, private MapService: MapService) {}
 
   ngOnInit() {
     this.initMap();
@@ -138,27 +135,26 @@ export class MapComponent implements OnInit, AfterViewChecked {
       }
       L.marker(geopoint.reverse(), { icon: this.myIcon }).addTo(this.map)
         .bindPopup(`
-          Adresse: ${location.address}, ${location.city}, ${location.postalCode}<br>
-          Taille en m²: ${location.area}
+        ${location.address} <br> ${location.city}, ${location.postalCode}<br>
+        Taille en m²: ${location.area}m²
         `);
     });
   }
-
   initMap(): void {
     this.map = L.map("map", {
-      maxBounds: [
-        [42.361, -4.76667],
-        [51.0833, 8.181],
-      ],
-      minZoom: 6,
-    }).setView([47.383333, 0.683333], 13);
+      maxBounds: this.DEFAULT_MAX_BOUND,
+      minZoom: this.DEFAULT_MIN_ZOOM,
+      zoomControl: false,
+    }).setView(this.DEFAULT_MAP_COORD, this.DEFAULT_ZOOM);
+
+    this.MapService.setMap(this.map);
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
       {
         attribution: "©OpenStreetMap, ©CartoDB",
         subdomains: "abcd",
-        maxZoom: 19,
+        maxZoom: this.DEFAULT_MAX_ZOOM,
       }
     ).addTo(this.map);
   }

@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Location } from "../location";
 import { map } from "rxjs";
+import { Location } from "src/app/location";
 
 interface OldLocationArray {
   recordid: string;
@@ -50,6 +50,7 @@ export class ApiGardenService {
                 recordLocation.fields.code_insee,
                 recordLocation.fields.libelle,
                 recordLocation.fields.commune,
+                recordLocation.image = "https://picsum.photos/200/200/?random="+ Math.floor(Math.random() * (542 - 1) + 1),
                 recordLocation.fields.geo_shape?.coordinates
               )
           );

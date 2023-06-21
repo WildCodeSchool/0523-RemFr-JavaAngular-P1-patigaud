@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ApiGardenService } from "src/app/services/api-gardens.service";
+import { ApiGardenService } from "./api-garden/api-gardens.service";
 
 export interface Coordinates {
   latitude: number;
