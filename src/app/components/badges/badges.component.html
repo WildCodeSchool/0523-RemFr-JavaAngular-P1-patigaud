@@ -14,16 +14,18 @@
 
 
 <section class="card_container">
-    <div class="card" *ngFor="let badge of badges">
-        {{badge.gotIt}}
+    <div class="card" *ngFor="let badge of badges; let index = index">
         <div [ngClass]="badge.gotIt != true ? 'grey' : 'infos_container' " class="infos_container">
             <div class="image">
-                <img src="{{badge.image_link}}" alt="">
+                <img class="image_{{badge.name}}" (click)="turnBadge(index)"
+                    [ngClass]="{'flip-vertical-right':index == selectedBadge}" src="{{badge.image_link}}"
+                    alt="{{badge.name}}">
+                <p [ngClass]="index == selectedBadge ? 'show, flip-vertical-right' : 'hidden' ">test, date d'obention et
+                    n° à placer ici</p>
             </div>
             <div class="description">
                 {{badge.description}}
             </div>
-            {{badge.name}}
         </div>
     </div>
 </section>

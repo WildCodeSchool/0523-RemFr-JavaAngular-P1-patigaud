@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './badges.component.html',
   styleUrls: ['./badges.component.scss']
 })
+
 export class BadgesComponent implements OnInit {
   private dbPath = '/badge';
 
@@ -49,11 +50,10 @@ export class BadgesComponent implements OnInit {
           this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
           this.retrievedUser = this.userFromDb;
           this.userBadges = this.retrievedUser.badges;
-          console.log(this.userBadges);
-          
+
           for (let i = 0; i < this.badges.length; i++) {
-            for(let j=0; j<this.userBadges.length; j++){
-              if(this.badges[i].name === this.userBadges[j]){
+            for (let j = 0; j < this.userBadges.length; j++) {
+              if (this.badges[i].name === this.userBadges[j]) {
                 this.badges[i].gotIt = true;
               }
             }
@@ -98,20 +98,17 @@ export class BadgesComponent implements OnInit {
         )
       ).subscribe(data => {
         this.badges = data;
-
-        // this.sub = this.activatedRoute.paramMap.subscribe((params) => {
-        //   this.badge.key = params.get('key');
-        //   this.badges.forEach((badge: Badge) => {
-
-        //     if (this.badge.key === badge.key) {
-        //       this.badge.name = badge.name;
-        //       //TODO : remove key after all tests
-        //       this.badge.key = badge.key;
-        //       this.badge.description = badge.description;
-        //     }
-        //   });
-        // });
       })
   }
 
+
+
+  isClicked: boolean = false;
+  selectedBadge: any = -1;
+  audio: HTMLAudioElement = new Audio("/assets/sounds/coin2.mp3");
+  turnBadge(index: number) {
+    this.selectedBadge = index;
+    this.isClicked = !this.isClicked;
+    this.audio.play();
+  }
 }
