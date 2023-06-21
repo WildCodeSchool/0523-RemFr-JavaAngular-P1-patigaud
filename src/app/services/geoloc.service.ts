@@ -69,7 +69,7 @@ export class GeolocService {
 
   checkMyLoc(locationsArray: any, mylat: number, mylong: number) {
     for (const poi of locationsArray) {
-      const myPos = [mylat, mylong];
+      const myPos = [mylong, mylat];
       if (poi.shape && this.getIsPointInsidePolygon(myPos, poi.shape[0])) {
         return poi.id;
       }
