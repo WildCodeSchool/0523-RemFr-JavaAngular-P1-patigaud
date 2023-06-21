@@ -81,8 +81,8 @@ export class GeolocService {
     return new Observable<any>((observer) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          //(position) => observer.next(position.coords),
-          () => observer.next(this.spoofcoords),
+          //(position) => observer.next(position.coords), //current position unused for now
+          () => observer.next(this.spoofcoords), //using testing set of coordinates
           (error) => observer.error(error)
         );
       } else {

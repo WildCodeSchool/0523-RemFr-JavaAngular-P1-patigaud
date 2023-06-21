@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import * as L from "leaflet";
 import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 import { GeolocService } from "src/app/services/geoloc.service";
@@ -13,29 +13,26 @@ import { MapService } from "src/app/services/map/map.service";
   styleUrls: ["./map.component.scss"],
 })
 
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
   private map!: L.Map;
   private polygons: Map<string, L.Polygon> = new Map();
   locations!: Location[];
   status = "loading";
-  doonce = true; //for testing purposes
   private unsubscribe$: Subject<void> = new Subject<void>();
   private myLong = 0;
   private myLat = 0;
+  private myPosMarker: any;
   private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667],[51.0833, 8.181]];
   private readonly DEFAULT_MAP_COORD: L.LatLngExpression = [47.383333, 0.683333];
   private readonly DEFAULT_ZOOM: number = 13;
   private readonly DEFAULT_MAX_ZOOM: number = 19;
   private readonly DEFAULT_MIN_ZOOM: number = 6;
 
-  @Input() cloudPointsMarkers: any = []; //for testing purposes
-
   constructor(private apiGardenService: ApiGardenService, private GeolocService: GeolocService, private MapService: MapService) {}
 
   ngOnInit() {
     this.initMap();
     this.getLocations();
-    this.addCloudMarkers(); //for testing purposes
     this.updateMyPosEvery5Sec();
   }
 
@@ -44,13 +41,6 @@ export class MapComponent implements OnInit {
     this.unsubscribe$.complete();
     console.log("geoloc observable destroyed");
   }
-
-  ngAfterViewChecked(): void {
-    //for testing purposes
-    this.addCloudMarkers();
-  }
-
-  private myPosMarker: any;
 
   updateMyPosEvery5Sec() {
     interval(3000)
@@ -64,14 +54,13 @@ export class MapComponent implements OnInit {
             this.myLong
           );
           if (polyid) {
-            const poly = this.polygons.get(polyid);
+            const poly = this.polygons.get(polyid); // using get and set methods from Leaflet
             if (poly) {
               poly.setStyle({ color: "lightgreen" });
             }
           }
           console.log("checking loc with shapes");
         }
-        //console.log("map called: getCurrentPosition")
       });
   }
 
@@ -80,7 +69,7 @@ export class MapComponent implements OnInit {
       next: (coords: any) => {
         if (this.myPosMarker != undefined) {
           this.map.removeLayer(this.myPosMarker);
-          this.myLong = this.myLong - 4 / 10000;
+          this.myLong = this.myLong - 4 / 10000; // testing purposes (increment longitude every few seconds)
           this.myPosMarker = L.marker([this.myLat, this.myLong], {
             icon: this.cloudIcon,
           }).addTo(this.map);
@@ -101,16 +90,6 @@ export class MapComponent implements OnInit {
     });
   }
 
-  addCloudMarkers() {
-    //for testing purposes
-    if (this.cloudPointsMarkers && this.doonce) {
-      this.doonce = false;
-      for (const marker of this.cloudPointsMarkers) {
-        L.marker(marker.reverse(), { icon: this.cloudIcon }).addTo(this.map);
-      }
-    }
-  }
-
   getLocations() {
     this.apiGardenService.getGardenList().subscribe((response) => {
       this.locations = response;
@@ -126,12 +105,8 @@ export class MapComponent implements OnInit {
       if (shape && Array.isArray(shape) && Array.isArray(shape[0])) {
         const coordinatesReversed = shape[0].map((coords) => coords.reverse());
         const poly = L.polygon(coordinatesReversed, { color: "darkgrey" });
-        this.polygons.set(location.id, poly);
+        this.polygons.set(location.id, poly); // using get and set methods from Leaflet, to recognize marker later
         poly.addTo(this.map);
-        // L.polygon(coordinatesReversed, {
-        //   //color: "lightgreen",
-        //   color: "darkgrey",
-        // }).addTo(this.map);
       }
       L.marker(geopoint.reverse(), { icon: this.myIcon }).addTo(this.map)
         .bindPopup(`
@@ -164,8 +139,7 @@ export class MapComponent implements OnInit {
     iconSize: [20, 20],
   });
 
-  private cloudIcon = L.icon({
-    //for testing purposes
+  private cloudIcon = L.icon({ //used for position marker
     iconUrl: "assets/maps-inverted.png",
     iconSize: [20, 20],
   });
