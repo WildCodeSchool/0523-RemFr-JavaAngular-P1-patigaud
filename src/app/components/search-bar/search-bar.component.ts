@@ -34,6 +34,7 @@ export class SearchBarComponent implements AfterViewInit {
   }
   result: any;
   private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
+  private readonly DEFAULT_MAP_ZOOM_FLYTO_ZONE: number = 13;
 
   constructor(private mapService: MapService) { }
 
@@ -101,10 +102,15 @@ export class SearchBarComponent implements AfterViewInit {
       if (layer instanceof L.Marker) this.map.removeLayer(layer);
       if (layer instanceof L.Polygon) this.map.removeLayer(layer);
     });
-  
+    let sumLat = 0;
+    let sumLng = 0;
     for (let marker of markers) {
       this.buildPopup(marker);
+      sumLat += marker.geoPoint[0];
+      sumLng += marker.geoPoint[1];
     }
+    const centerMarkers: any = [sumLat / markers.length, sumLng / markers.length];
+    this.map.setView(centerMarkers, this.DEFAULT_MAP_ZOOM_FLYTO_ZONE);
   }
   
 
@@ -169,11 +175,19 @@ export class SearchBarComponent implements AfterViewInit {
   selectOption(text: any) {
     this.option = text;
     this.filterTheMap();
+    if (this.selectedIndex !== undefined) {
+      this.isDropDownOpen = false;
+    }
   }
 
+  isDropDownOpen: any = false;
   selectedIndex: number = 0;
   changeSelection(event: any, index: any) {
     this.selectedIndex = event.target.checked ? index : undefined;
+  }
+
+  OpenCloseDropDown() {
+    this.isDropDownOpen = !this.isDropDownOpen;
   }
   
   
