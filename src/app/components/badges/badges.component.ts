@@ -28,6 +28,9 @@ export class BadgesComponent implements OnInit {
   userBadges: any[] = [];
   userBadge: any;
   result: any;
+  obtention_date: Date = new Date();
+  badgeObtentionDate: any[] = [];
+  badgeObtentionNumber: number[] = [];
 
   public connectedBadge!: string | null;
 
@@ -52,12 +55,14 @@ export class BadgesComponent implements OnInit {
 
           for (let i = 0; i < this.badges.length; i++) {
             for (let j = 0; j < this.userBadges.length; j++) {
-              if (this.badges[i].name === this.userBadges[j]) {
+              if (this.badges[i].name === this.userBadges[j].name) {
                 this.badges[i].gotIt = true;
+                this.badgeObtentionDate[i] = this.userBadges[j].obtention_date;
+                this.badgeObtentionNumber[i] = this.userBadges[j].obtention_number;
               }
             }
           }
-        })
+        });
     } else {
       this.retrievedUser = null;
     }
@@ -98,14 +103,14 @@ export class BadgesComponent implements OnInit {
       ).subscribe(data => {
         this.badges = data;
           this.checkForConnectedUser();
+        this.checkForConnectedUser();
       })
   }
 
-
-
-  isClicked: boolean = false;
+  isClicked = false;
   selectedBadge: any = -1;
   audio: HTMLAudioElement = new Audio("/assets/sounds/coin2.mp3");
+
   turnBadge(index: number) {
     this.selectedBadge = index;
     this.isClicked = !this.isClicked;
