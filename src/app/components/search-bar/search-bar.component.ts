@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, AfterViewInit, AfterViewChecked, AfterContentChecked } from "@angular/core";
+import { Component, Input, HostListener, AfterViewInit } from "@angular/core";
 import { Location } from "../../location";
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MapService } from "src/app/services/map/map.service";
@@ -16,7 +16,7 @@ import * as L from "leaflet";
     ]),
   ],
 })
-export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
+export class SearchBarComponent implements AfterViewInit {
   @Input() locations!: Location[];
   searchResults: Location[] = [];
   map!: L.Map;
@@ -26,14 +26,13 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   city: string = '';
   postalCode: number = 0;
   structure: string = '';
-  test: any;
+  option: any;
   optionsFilters = {
     optionsCity: Array<string>(),
     optionsPostalCode: Array<string>(),
     optionsStructure: Array<string>(),
   }
   result: any;
-  isOptionsLoaded: boolean = false;
   private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
 
   constructor(private mapService: MapService) { }
@@ -52,9 +51,6 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
     if (this.mapService.isLoaded) {
       this.optionsForTheFilters();
     }
-  }
-
-  ngAfterContentChecked() {
   }
 
   onInput(event: any) {
@@ -85,7 +81,7 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
 
   goToLocation(location: Location) {
     this.inputText = '';
-    if (this.test !== ""){
+    if (this.option !== ""){
       this.selectOption('');
     }
     this.searchResults = [];
@@ -146,22 +142,22 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
 
   filterTheMap() {
     const filteredLocations = this.locations.filter((location: Location) => {
-      return location.city === this.test || 
-      location.postalCode === this.test ||
-      location.structure === this.test
+      return location.city === this.option || 
+      location.postalCode === this.option ||
+      location.structure === this.option
     });
   
-    const previousCity = this.test;  
-    if (previousCity !== this.test) {
+    const previousCity = this.option;  
+    if (previousCity !== this.option) {
       this.map.eachLayer((layer: any) => {
         if (layer instanceof L.Marker) this.map.removeLayer(layer);
         if (layer instanceof L.Polygon) this.map.removeLayer(layer);
       });
     }
   
-    if (this.test === "") {
+    if (this.option === "") {
       this.buildMarkers(this.locations);
-    } else if (this.test !== "") {
+    } else if (this.option !== "") {
       this.buildMarkers(filteredLocations);
     }
   
@@ -171,8 +167,13 @@ export class SearchBarComponent implements AfterViewInit, AfterContentChecked {
   }
 
   selectOption(text: any) {
-    this.test = text;
+    this.option = text;
     this.filterTheMap();
+  }
+
+  selectedIndex: number = 0;
+  changeSelection(event: any, index: any) {
+    this.selectedIndex = event.target.checked ? index : undefined;
   }
   
   

@@ -8,45 +8,28 @@
       <div class="result-city">{{ result.city }}, {{result.postalCode}}</div>
     </div>
   </div>
-  <!--<div class="dropdown" *ngIf="!isFocused">
-    aaaaaa
-    <div class="dropdown-content">
-      <div name="empty" [class.selected]="test === ''" (click)="selectOption('')">Empty</div>
-      <h3>Villes</h3>
-      <div name="city" *ngFor="let result of optionsFilters.optionsCity" [class.selected]="test === result" (click)="selectOption(result)">
-        {{result}}
-      </div>
-      <h3>Code postal</h3>
-      <div name="postalCode" *ngFor="let result of optionsFilters.optionsPostalCode" [class.selected]="test === result.toString()" (click)="selectOption(result)">
-        {{ result }}
-      </div>
-      <h3>Structures</h3>
-      <div name="Structures" *ngFor="let result of optionsFilters.optionsStructure" [class.selected]="test === result" (click)="selectOption(result)">
-        {{ result }}
-      </div>
-    </div>
-  </div>!-->
   <div class="sec-center" *ngIf="!isFocused"> 	
     <input class="dropdown" type="checkbox" id="dropdown" name="dropdown"/>
-    <label class="for-dropdown" for="dropdown">Dropdown Menu <i class="uil uil-arrow-down"></i></label>
+    <label class="for-dropdown" for="dropdown"><img src="./assets/filters.svg" width="30px" height="30px"/></label>
     <div class="section-dropdown"> 
-      <input class="dropdown-sub" type="checkbox" id="dropdown-sub" name="dropdown-sub"/>
-      <label class="for-dropdown-sub" for="dropdown-sub">Villes<i class="uil uil-plus"></i></label>
-      <div class="section-dropdown-sub" name="city" *ngFor="let result of optionsFilters.optionsCity" [class.selected]="test === result" (click)="selectOption(result)">
-        <p class="serparator">{{ result }}</p>
+      <input class="dropdown-sub-city" type="checkbox" id="dropdown-sub-city" name="dropdown-sub-city" [ngModel]="selectedIndex === 0" (change)="changeSelection($event, 0)"/>
+      <label class="for-dropdown-sub-city" for="dropdown-sub-city">Villes<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-city" name="city" *ngFor="let city of optionsFilters.optionsCity" [class.selected]="option === city" (click)="selectOption(city)">
+        <p>{{ city }}</p>
+        <div class="serparator"></div>
+      </div>
+      <input class="dropdown-sub-postalCode" type="checkbox" id="dropdown-sub-postalCode" name="dropdown-sub-postalCode" [ngModel]="selectedIndex === 1" (change)="changeSelection($event, 1)"/>
+      <label class="for-dropdown-sub-postalCode" for="dropdown-sub-postalCode">Code Postal<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-postalCode" name="postalCode" *ngFor="let postalCode of optionsFilters.optionsPostalCode" [class.selected]="option === postalCode" (click)="selectOption(postalCode)">
+        <p>{{ postalCode }}</p>
+        <div class="serparator"></div>
+      </div>
+      <input class="dropdown-sub-structure" type="checkbox" id="dropdown-sub-structure" name="dropdown-sub-structure" [ngModel]="selectedIndex === 2" (change)="changeSelection($event, 2)"/>
+      <label class="for-dropdown-sub-structure" for="dropdown-sub-structure">Structures<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-structure" name="city" *ngFor="let structure of optionsFilters.optionsStructure" [class.selected]="option === structure" (click)="selectOption(structure)">
+        <p>{{ structure }}</p>
+        <div class="serparator"></div>
       </div>
     </div>
   </div>
-  <!--<select name="city" id="city" (ngModelChange)="filterTheMap()" size="1">
-    <option value=""></option>
-    <optgroup label="City" [(ngModel)]="city">
-      <option *ngFor="let result of optionsFilters.optionsCity">{{result}}</option>
-    </optgroup>
-    <optgroup label="Postal Code" [(ngModel)]="postalCode">
-      <option *ngFor="let result of optionsFilters.optionsPostalCode">{{result}}</option>
-    </optgroup>
-    <optgroup label="Structure" [(ngModel)]="structure">
-      <option *ngFor="let result of optionsFilters.optionsStructure">{{result}}</option>
-    </optgroup>
-  </select>!-->
 </div>
