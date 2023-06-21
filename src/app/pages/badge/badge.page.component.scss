@@ -1,0 +1,20 @@
+.top-bar {
+    background: linear-gradient(180deg, rgba(0, 191, 125, 1) 0%, rgba(0, 138, 90, 1) 100%);
+    z-index: 5000;
+    position: fixed;
+    box-shadow: 1px 5px 5px rgba($color: #000000, $alpha: 0.2);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    font-family: Passero One;
+    font-size: 3rem;
+    color: #F2FFDF;
+    margin: 0 0 0 2rem;
+
+}

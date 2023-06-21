@@ -40,11 +40,11 @@ export class ApiGardenService {
       .pipe(
         map((response) => {
           return response.records.map(
-            (recordLocation: any) =>
+            (recordLocation: any) => 
               new Location(
                 recordLocation.recordid,
                 recordLocation.fields.adresse,
-                recordLocation.geometry.coordinates,
+                recordLocation.geometry.coordinates.reverse(),
                 recordLocation.fields.aire_en_m,
                 recordLocation.fields.structure,
                 recordLocation.fields.code_insee,

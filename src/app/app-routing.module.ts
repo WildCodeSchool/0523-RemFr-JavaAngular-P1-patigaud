@@ -6,7 +6,6 @@ import { HomePageComponent } from './pages/home/home.page.component';
 import { UserPageComponent } from './pages/user/user.page.component';
 import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
-import { TestlocComponent } from './components/testloc/testloc.component';
 import { AddUserComponent } from './components/user/add-user/add-user.component';
 
 const routes: Routes = [
@@ -20,10 +19,7 @@ const routes: Routes = [
     path: 'patidex', component: PatidexPageComponent
   },
   {
-    path: 'badge', component: BadgePageComponent
-  },
-  {
-    path: 'geoloc', component: TestlocComponent
+    path: 'badge', component: BadgePageComponent 
   },
   {
     path: 'viewUser/:key', component: UserPageComponent

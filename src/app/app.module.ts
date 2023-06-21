@@ -18,7 +18,6 @@ import { UserPageComponent } from './pages/user/user.page.component';
 import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
-import { TestlocComponent } from './components/testloc/testloc.component';
 import { AddUserComponent } from './components/user/add-user/add-user.component';
 import { ViewUserComponent } from './components/user/view-user/view-user.component';
 import { AngularFireModule } from '@angular/fire/compat';
@@ -27,7 +26,11 @@ import { environment } from '../app/environments/environment'
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FormsModule } from "@angular/forms";
+<<<<<<< HEAD
 import { StatisticsComponent } from './components/statistics/statistics.component'; 
+=======
+import { BadgesComponent } from './components/badges/badges.component'; 
+>>>>>>> fec3d2ba47dbe58f99b8cd21944600a7101826c3
 
 @NgModule({
   declarations: [
@@ -44,11 +47,15 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
     PatidexPageComponent,
     BadgePageComponent,
     MapComponent,
-    TestlocComponent,
     AddUserComponent,
     ViewUserComponent,
     SearchBarComponent,
+<<<<<<< HEAD
     StatisticsComponent,
+=======
+    BadgesComponent,
+
+>>>>>>> fec3d2ba47dbe58f99b8cd21944600a7101826c3
   ],
   imports: [
     BrowserModule,
@@ -56,10 +63,10 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AngularFireModule.initializeApp(environment),
-    AngularFireDatabaseModule,
     DragDropModule,
     FormsModule,
+    AngularFireModule.initializeApp(environment),
+    AngularFireDatabaseModule,    
   ],
   providers: [],
   bootstrap: [AppComponent],
