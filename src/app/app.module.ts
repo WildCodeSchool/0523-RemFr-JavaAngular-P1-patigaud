@@ -25,7 +25,8 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../app/environments/environment'
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { FormsModule } from "@angular/forms"; 
+import { FormsModule } from "@angular/forms";
+import { BadgesComponent } from './components/badges/badges.component'; 
 
 @NgModule({
   declarations: [
@@ -44,7 +45,9 @@ import { FormsModule } from "@angular/forms";
     MapComponent,
     AddUserComponent,
     ViewUserComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    BadgesComponent,
+
   ],
   imports: [
     BrowserModule,
