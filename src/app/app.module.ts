@@ -18,7 +18,6 @@ import { UserPageComponent } from './pages/user/user.page.component';
 import { PatidexPageComponent } from './pages/patidex/patidex.page.component';
 import { BadgePageComponent } from './pages/badge/badge.page.component';
 import { MapComponent } from './components/map/map.component';
-import { TestlocComponent } from './components/testloc/testloc.component';
 import { AddUserComponent } from './components/user/add-user/add-user.component';
 import { ViewUserComponent } from './components/user/view-user/view-user.component';
 import { AngularFireModule } from '@angular/fire/compat';
@@ -43,10 +42,9 @@ import { FormsModule } from "@angular/forms";
     PatidexPageComponent,
     BadgePageComponent,
     MapComponent,
-    TestlocComponent,
     AddUserComponent,
     ViewUserComponent,
-    SearchBarComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,
@@ -54,10 +52,10 @@ import { FormsModule } from "@angular/forms";
     BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AngularFireModule.initializeApp(environment),
-    AngularFireDatabaseModule,
     DragDropModule,
     FormsModule,
+    AngularFireModule.initializeApp(environment),
+    AngularFireDatabaseModule,    
   ],
   providers: [],
   bootstrap: [AppComponent],
