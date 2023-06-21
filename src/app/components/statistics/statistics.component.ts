@@ -72,6 +72,7 @@ export class StatisticsComponent implements OnInit {
               this.currentUser.key = user.key;
               this.currentUser.gender = user.gender;
               this.calculateDistance(this.currentUser);
+              console.log(this.currentUser);
             }
           });
         });

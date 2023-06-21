@@ -38,7 +38,6 @@ export class BadgesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getConnectedBadge();
-    this.checkForConnectedUser();
   }
 
   checkForConnectedUser() {
@@ -98,6 +97,7 @@ export class BadgesComponent implements OnInit {
         )
       ).subscribe(data => {
         this.badges = data;
+          this.checkForConnectedUser();
       })
   }
 
