@@ -25,7 +25,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
   private myLong = 0;
   private myLat = 0;
   private myPosMarker: any;
-  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667],[51.0833, 8.181]];
+  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667], [51.0833, 8.181]];
   private readonly DEFAULT_MAP_COORD: L.LatLngExpression = [47.383333, 0.683333];
   private readonly DEFAULT_ZOOM: number = 13;
   private readonly DEFAULT_MAX_ZOOM: number = 19;
@@ -41,6 +41,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private MapService: MapService,
     private GardenService: GardenService
     ) {}
+  private readonly DEFAULT_MAP_ZOOM_FLYTO_ZONE: number = 15;
+
 
   ngOnInit() {
     this.initMap();
@@ -204,4 +206,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     iconUrl: "assets/maps-inverted.png",
     iconSize: [20, 20],
   });
+
+  centerPlayer() {
+    this.GeolocService.getCurrentPosition()
+      .subscribe({
+        next: ((coords: any) => {
+          this.map.flyTo([coords.lat, this.myLong = this.myLong], this.DEFAULT_MAP_ZOOM_FLYTO_ZONE); - 4 / 10000// testing purposes (increment longitude every few seconds)
+        })
+      });
+  }
+  
 }
