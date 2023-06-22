@@ -102,7 +102,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
           if (polyid) {
             const poly = this.polygons.get(polyid); // using get and set methods from Leaflet
             if (poly) {
-              if (this.gardens.length > 0) {
                 const currentUser = localStorage.getItem('pseudo')
                 const today = new Date()
                 const newgarden = new Garden();
@@ -118,8 +117,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 if (!found) {
                   this.GardenService.create(newgarden)
                 }
-
-              }
+             
               poly.setStyle({ color: "lightgreen" });
             }
           }
