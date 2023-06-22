@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.service';
 
 @Component({
@@ -8,7 +7,7 @@ import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.servic
   styleUrls: ['./patidex.component.scss']
 })
 export class PatidexComponent implements OnInit {
-
+  openedIndex: number = -1;
   constructor(private apiGardenService: ApiGardenService) { }
 
   locations: any
@@ -17,6 +16,14 @@ export class PatidexComponent implements OnInit {
   getLocations() {
     this.apiGardenService.getGardenList()
     .subscribe((response) => this.locations = response)
+  }
+
+  openDetails(index: number) {
+    this.openedIndex = index === this.openedIndex ? -1 : index;
+  }
+
+  close(index: number) {
+    this.openedIndex = -1;
   }
 
   ngOnInit(): void {
