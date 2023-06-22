@@ -72,7 +72,6 @@ export class BackgroundCheckComponent implements OnInit, OnDestroy {
               for(let i = 0; i < this.gardens.length; i++) {
                 if ((this.gardens[i].userKey === currentUser) && (this.gardens[i].gardenId === polyid) ) {
                   found = true 
-                  console.log(`found ya ${this.gardens[i].gardenId}`)
                 }
               }
               if (!found) {
@@ -126,24 +125,5 @@ export class BackgroundCheckComponent implements OnInit, OnDestroy {
       this.status = "ready";
     });
   }
-
-  /*
-  drawPolygons(locations: Location[]) {
-    locations.forEach((location: Location) => {
-      const geopoint: number[] | any = location.geoPoint;
-      const shape: number[] | undefined = location?.shape;
-      if (shape && Array.isArray(shape) && Array.isArray(shape[0])) {
-        const coordinatesReversed = shape[0].map((coords) => [coords[1], coords[0]]);
-        const poly = L.polygon(coordinatesReversed, { color: "darkgrey" });
-        this.polygons.set(location.id, poly); // using get and set methods from Leaflet, to recognize marker later
-        poly.addTo(this.map);
-      }
-      L.marker(geopoint, { icon: this.myIcon }).addTo(this.map)
-        .bindPopup(`
-        ${location.address} <br> ${location.city}, ${location.postalCode}<br>
-        Taille en m²: ${location.area}m²
-        `);
-    });
-  } */
 
 }
