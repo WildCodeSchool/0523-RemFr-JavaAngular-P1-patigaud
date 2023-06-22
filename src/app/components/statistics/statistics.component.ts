@@ -5,6 +5,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { map } from 'rxjs/operators';
 import { User } from 'src/app/models/user';
 import { Badge } from 'src/app/models/badge';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-statistics',
@@ -12,49 +13,56 @@ import { Badge } from 'src/app/models/badge';
   styleUrls: ['./statistics.component.scss']
 })
 export class StatisticsComponent implements OnInit {
-  currentUser: User = {
-    key: '',
-    pseudo: '',
-    gender: '',
-    distance: 10,
-    // badges: any = [],
-  };
+
   sub: any;
   users: any;
   userLatitude: number | undefined;
   userLongitude: number | undefined;
-  userFromDb: User | undefined;
-  retrievedUser: any;
+  currentUser: any;
   userBadges: Badge[] = [];
-  connectedUserPseudo: string | null = '';
+  connectedUserPseudo: any = "";
   badgeObtentionDate: any[] = [];
   badgeObtentionNumber: number[] = [];
   badges: Badge[] = []
   badge: Badge = new Badge();
+  userFromDb: any;
+  retrievedUser: any;
 
   constructor(
     private userService: UserService,
     private geolocService: GeolocService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private db: AngularFireDatabase
+  ) {
+  }
 
   ngOnInit() {
-    this.retrieveUsers();
     this.getCurrentPosition();
-    this.userService.getConnectedUser()
-      .subscribe((data: any) => {
-        this.users = data;
-        this.connectedUserPseudo = localStorage.getItem('pseudo');
-        if (this.connectedUserPseudo != null) {
-          this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
-          if (this.userFromDb != undefined && this.userFromDb.pseudo === this.connectedUserPseudo) {
-            localStorage.setItem('freshlyConnectedUser', 'true'); 
-            this.router.navigate(['home']);
-          }
-        }
-      })
+    this.checkForConnectedUser();
+    this.calculateDistance(this.currentUser);
   }
+
+  checkForConnectedUser() {
+    if (localStorage.getItem('pseudo') != null) {
+      this.userService.getConnectedUser()
+        .subscribe((data: any) => {
+          this.users = data;
+          this.connectedUserPseudo = localStorage.getItem('pseudo');
+          if (this.connectedUserPseudo != null && this.connectedUserPseudo !== undefined) {
+            this.userFromDb = this.users.find((userFromDb: any) => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
+            this.currentUser = this.userFromDb;
+            this.currentUser.distance = 10;
+            console.log(this.currentUser);
+            this.userBadges = this.currentUser.badges;
+            this.calculateDistance(this.currentUser); // Appel de calculateDistance() après avoir défini this.currentUser
+          }
+        });
+    } else {
+      this.retrievedUser = null;
+    }
+  }
+
 
   calculateDistance(currentUser: User) {
     this.geolocService.getCurrentPosition().subscribe(
@@ -63,7 +71,7 @@ export class StatisticsComponent implements OnInit {
         const longitudeStart = position.longitude;
         const latitudeEnd = this.userLatitude !== undefined ? this.userLatitude : 0;
         const longitudeEnd = this.userLongitude !== undefined ? this.userLongitude : 0;
-
+  
         const distanceInMeters = this.calculateDistanceBetweenPoints(
           latitudeStart,
           longitudeStart,
@@ -71,6 +79,7 @@ export class StatisticsComponent implements OnInit {
           longitudeEnd
         );
         this.currentUser.distance = this.convertMetersToKilometers(distanceInMeters);
+        console.log(this.currentUser.distance); // Afficher la distance mise à jour avec trois décimales
       },
       (error: any) => {
         console.error('Erreur de géolocalisation :', error);
@@ -78,19 +87,7 @@ export class StatisticsComponent implements OnInit {
     );
   }
 
-  retrieveUsers(): void {
-    this.userService.getAll().snapshotChanges()
-      .pipe(
-        map(changes =>
-          changes.map(c =>
-            ({ key: c.payload.key, ...c.payload.val() })
-          )
-        )
-      ).subscribe(data => {
-        this.users = data;
-      })
-  }
-      
+
 
   calculateDistanceBetweenPoints(
     lat1: number,
@@ -106,9 +103,9 @@ export class StatisticsComponent implements OnInit {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.degreesToRadians(lat1)) *
-        Math.cos(this.degreesToRadians(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.degreesToRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
@@ -122,9 +119,9 @@ export class StatisticsComponent implements OnInit {
 
   convertMetersToKilometers(meters: number): number {
     if (isNaN(meters) || meters === undefined) {
-      return 0; // Ou une valeur par défaut appropriée si la distance est invalide
+      return 1; // Ou une valeur par défaut appropriée si la distance est invalide
     }
-    return meters / 1000;
+    return parseFloat((meters / 1000).toFixed(3)); // Utiliser toFixed(3) pour afficher trois décimales
   }
 
   disconnectUser(): void {
@@ -163,7 +160,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   getNumberOfUnlockedBadges(): any {
-    return this.currentUser;
+    return this.currentUser.badges.length;
     console.log(this.currentUser);
     // return 0;
   }
