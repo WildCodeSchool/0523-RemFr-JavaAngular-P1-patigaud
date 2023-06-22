@@ -26,7 +26,8 @@ import { environment } from '../app/environments/environment'
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FormsModule } from "@angular/forms";
-import { BadgesComponent } from './components/badges/badges.component'; 
+import { BadgesComponent } from './components/badges/badges.component';
+import { BackgroundCheckComponent } from './components/background-check/background-check.component'; 
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { BadgesComponent } from './components/badges/badges.component';
     ViewUserComponent,
     SearchBarComponent,
     BadgesComponent,
+    BackgroundCheckComponent,
 
   ],
   imports: [
