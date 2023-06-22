@@ -105,7 +105,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
               if (this.gardens.length > 0) {
                 const currentUser = localStorage.getItem('pseudo')
                 const today = new Date()
-                console.log(today)
                 const newgarden = new Garden();
                 newgarden.gardenId = polyid
                 newgarden.obtention_date = today
@@ -118,7 +117,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 }
                 if (!found) {
                   this.GardenService.create(newgarden)
-                  console.log("creating new")
                 }
 
               }
