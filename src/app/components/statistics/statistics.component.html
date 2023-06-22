@@ -1,6 +1,12 @@
 <div class="container">
-  <header class="header">--{{ currentUser.pseudo }}--</header>
-  <button type="submit" (click)="disconnectUser()">Se déconnecter et retourner à l'accueil</button>
+  <header class="header">
+    <div class="header-left">
+      <h1>{{ currentUser.pseudo }}</h1>
+    </div>
+    <div class="header-right">
+      <button type="submit" class="button-deconnexion" (click)="disconnectUser()">Se déconnecter</button>
+    </div>
+  </header>
   <div class="collection">Derniers badges débloqués</div>
   <div class="fake-badge-group">
     <div class="fake-badge"></div>
@@ -18,7 +24,7 @@
     <div class="statistiques">
       <div class="km-stat">KM parcourus : {{ currentUser.distance }}</div>
       <div class="jardin-stat">Jardins trouvés :</div>
-      <div class="badge-stat">Nombre badges :</div>
+      <div class="badge-stat">Nombre badges : {{ getNumberOfUnlockedBadges() }}</div>
       <div class="aire-stat">Aire totale trouvée :</div>
     </div>
   </div>

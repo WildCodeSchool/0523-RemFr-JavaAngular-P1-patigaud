@@ -16,9 +16,33 @@
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* Utilisation de justify-content pour espacer les éléments horizontalement */
   text-align: center;
   margin-bottom: 20px;
+}
+
+.header-left {
+  flex: 1; /* Utilisation de flex pour permettre au titre de prendre autant d'espace que nécessaire */
+}
+
+.header-right {
+  margin-right: 15px; /* Marge à droite pour séparer le bouton du titre */
+}
+
+.button-deconnexion {
+  background-color: #22ca84;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+}
+
+.button-deconnexion:hover {
+  background-color: #22ca84;
 }
 
 .collection {
