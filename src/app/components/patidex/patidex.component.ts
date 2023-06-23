@@ -15,7 +15,7 @@ export class PatidexComponent implements OnInit {
 
   getLocations() {
     this.apiGardenService.getGardenList()
-    .subscribe((response) => this.locations = response)
+    .subscribe((response) => this.locations = response);
   }
 
   openDetails(index: number) {

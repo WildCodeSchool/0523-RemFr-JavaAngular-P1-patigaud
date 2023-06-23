@@ -9,13 +9,13 @@
 }
 
 .card_container {
-    margin-top: 100px;
+    padding-top: 100px;
     display: flex;
     width: 100vw;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    margin-bottom: 100px;
+    padding-bottom: 100px;
     row-gap: 2rem;
 }
 
