@@ -2,16 +2,26 @@
     <div class="card_container" *ngIf="status === 'ready'">
         <div class="card" *ngFor="let location of locations; let i = index">
             <app-details [details]="locations[i]" [opened]="openedIndex === i" (close)="close($event)" [index]="i"></app-details>
-            <div class="info_container" (click)="openDetails(i)">
+            <div class="info_container" (click)="openDetails(i)" *ngIf="this.isInsideMyGardenIds(locations[i].id)">
                 <div class="image">
                     <img src="{{ location.image }}" alt="Une image correspondant à ce jardin" loading="lazy">
                 </div>
-                <div class="garden_title">
+                <div class="garden_title" *ngIf="this.isInsideMyGardenIds(locations[i].id)">
                     <p>
                          {{location.address}}, {{ location.city }}
                     </p>
                 </div>
             </div>
+            <div class="info_container_not" *ngIf="!this.isInsideMyGardenIds(locations[i].id)">
+                <div class="image">
+                    <img src="{{ location.image }}" alt="Une image correspondant à ce jardin" loading="lazy">
+                </div>
+                <div class="garden_title_not"  *ngIf="!this.isInsideMyGardenIds(locations[i].id)">
+                    <p>
+                         {{location.address}}, {{ location.city }}
+                    </p>
+                </div>
+            </div>            
             <br><br>
         </div>
     </div>
