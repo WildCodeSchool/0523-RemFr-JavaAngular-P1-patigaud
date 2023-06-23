@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewChecked } from "@angular/core";
 import * as L from "leaflet";
 import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 import { GeolocService } from "src/app/services/geoloc.service";
@@ -6,6 +6,9 @@ import { Location } from "../../location";
 import { interval, Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { MapService } from "src/app/services/map/map.service";
+import { map } from 'rxjs';
+import { Garden } from 'src/app/models/garden';
+import { GardenService } from "src/app/services/garden/garden.service";
 
 @Component({
   selector: "app-map",
@@ -13,7 +16,7 @@ import { MapService } from "src/app/services/map/map.service";
   styleUrls: ["./map.component.scss"],
 })
 
-export class MapComponent implements OnInit, OnDestroy {
+export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
   private map!: L.Map;
   private polygons: Map<string, L.Polygon> = new Map();
   locations!: Location[];
@@ -22,23 +25,69 @@ export class MapComponent implements OnInit, OnDestroy {
   private myLong = 0;
   private myLat = 0;
   private myPosMarker: any;
-  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667],[51.0833, 8.181]];
+  private readonly DEFAULT_MAX_BOUND: L.LatLngBoundsExpression | any = [[42.361, -4.76667], [51.0833, 8.181]];
   private readonly DEFAULT_MAP_COORD: L.LatLngExpression = [47.383333, 0.683333];
   private readonly DEFAULT_ZOOM: number = 13;
   private readonly DEFAULT_MAX_ZOOM: number = 19;
   private readonly DEFAULT_MIN_ZOOM: number = 6;
+  private readyPoly = false
+  private readyGardens = false
+  private gardens: Garden[] = [];
 
-  constructor(private apiGardenService: ApiGardenService, private GeolocService: GeolocService, private MapService: MapService) {}
+
+  constructor(
+    private apiGardenService: ApiGardenService, 
+    private GeolocService: GeolocService, 
+    private MapService: MapService,
+    private GardenService: GardenService
+    ) {}
+  private readonly DEFAULT_MAP_ZOOM_FLYTO_ZONE: number = 15;
+
 
   ngOnInit() {
     this.initMap();
     this.getLocations();
     this.updateMyPosEvery5Sec();
+    this.getAllGardens();
   }
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  ngAfterViewChecked() {
+    if(this.readyPoly && this.readyGardens) {
+      this.afterReceivingGardensData();
+      this.readyPoly = false;
+      this.readyGardens = false;
+    }
+  }
+
+  getAllGardens() {
+    this.GardenService.getAll().snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe((data: any) => {
+        this.gardens = data;
+        this.readyGardens = true
+      })    
+  }
+
+  afterReceivingGardensData() {
+    if (this.gardens.length > 0) {
+      const currentUser = localStorage.getItem('pseudo')
+      for(let i = 0; i < this.gardens.length; i++) {
+        if ((this.gardens[i].userKey === currentUser) && (this.gardens[i].gardenId)) {
+          const poly = this.polygons.get(this.gardens[i].gardenId);
+          poly?.setStyle({ color: "lightgreen" });
+        }
+      }
+    }
   }
 
   updateMyPosEvery5Sec() {
@@ -55,6 +104,24 @@ export class MapComponent implements OnInit, OnDestroy {
           if (polyid) {
             const poly = this.polygons.get(polyid); // using get and set methods from Leaflet
             if (poly) {
+              if (this.gardens.length > 0) {
+                const currentUser = localStorage.getItem('pseudo')
+                const today = new Date()
+                const newgarden = new Garden();
+                newgarden.gardenId = polyid
+                newgarden.obtention_date = today
+                newgarden.userKey = currentUser
+                let found = false                
+                for(let i = 0; i < this.gardens.length; i++) {
+                  if ((this.gardens[i].userKey === currentUser) && (this.gardens[i].gardenId === polyid) ) {
+                    found = true    
+                  }
+                }
+                if (!found) {
+                  this.GardenService.create(newgarden)
+                }
+
+              }
               poly.setStyle({ color: "lightgreen" });
             }
           }
@@ -109,6 +176,7 @@ export class MapComponent implements OnInit, OnDestroy {
         Taille en m²: ${location.area}m²
         `);
     });
+    this.readyPoly = true;
   }
   initMap(): void {
     this.map = L.map("map", {
@@ -138,4 +206,14 @@ export class MapComponent implements OnInit, OnDestroy {
     iconUrl: "assets/maps-inverted.png",
     iconSize: [20, 20],
   });
+
+  centerPlayer() {
+    this.GeolocService.getCurrentPosition()
+      .subscribe({
+        next: ((coords: any) => {
+          this.map.flyTo([coords.lat, this.myLong = this.myLong], this.DEFAULT_MAP_ZOOM_FLYTO_ZONE); - 4 / 10000// testing purposes (increment longitude every few seconds)
+        })
+      });
+  }
+  
 }
