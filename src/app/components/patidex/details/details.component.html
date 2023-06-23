@@ -1,0 +1,25 @@
+
+<div class="background-blur" *ngIf="opened">
+    <div class="container-details">
+        <div class="close-button" (click)="onClose()">X</div>
+        <div class="primary-information">
+            <div class="image">
+                <img src="{{ details.image }}" alt="Une image correspondant à ce jardin" loading="lazy">
+            </div>
+            <div class="title">
+                <p class="address">
+                    {{ details.address }}
+                </p>
+                <p class="city">
+                    {{ details.city }}
+                </p>
+                <p class="area">Aire en m²: {{ details.area }}</p>
+            </div>
+        </div>
+        <div class="secondary-information">
+            <p>
+                Dans le jardin situé {{this.details.address}} à {{this.details.city}}, On peut y trouver {{ generatedParagraph }}
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
 <section>
     <div class="card_container" *ngIf="status === 'ready'">
-
-        <div class="card" *ngFor="let location of locations">
-            <div class="info_container">
+        <div class="card" *ngFor="let location of locations; let i = index">
+            <app-details [details]="locations[i]" [opened]="openedIndex === i" (close)="close($event)" [index]="i"></app-details>
+            <div class="info_container" (click)="openDetails(i)">
                 <div class="image">
                     <img src="{{ location.image }}" alt="Une image correspondant à ce jardin" loading="lazy">
                 </div>
@@ -14,7 +14,6 @@
             </div>
             <br><br>
         </div>
-
     </div>
     <div *ngIf="status === 'loading'">
         Loading...

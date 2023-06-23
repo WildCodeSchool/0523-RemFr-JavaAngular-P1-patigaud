@@ -50,7 +50,7 @@ export class ApiGardenService {
                 recordLocation.fields.code_insee,
                 recordLocation.fields.libelle,
                 recordLocation.fields.commune,
-                recordLocation.image = "https://picsum.photos/200/200/?random="+ Math.floor(Math.random() * (542 - 1) + 1),
+                recordLocation.image = "https://loremflickr.com/500/500/garden?=" + Math.floor(Math.random() * 1000),
                 recordLocation.fields.geo_shape?.coordinates
               )
           );
