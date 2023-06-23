@@ -264,8 +264,6 @@ export class StatisticsComponent implements OnInit, AfterViewChecked { //OnChang
   }
 
   getNumberOfUnlockedBadges(): any {
-    return this.userBadges.length;
-    //console.log(this.currentUser);
-    // return 0;
+    return Object.keys(this.userBadges).length;
   }
 }
