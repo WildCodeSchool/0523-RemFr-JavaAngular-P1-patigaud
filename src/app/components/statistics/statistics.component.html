@@ -23,9 +23,9 @@
     <h2>Statistiques:</h2>
     <div class="statistiques">
       <div class="km-stat">KM parcourus : {{ currentUser.distance }}</div>
-      <div class="jardin-stat">Jardins trouvés :</div>
       <div class="badge-stat">Nombre badges : {{ getNumberOfUnlockedBadges() }}</div>
-      <div class="aire-stat">Aire totale trouvée :</div>
+      <div class="jardin-stat">Jardins trouvés : {{ this.numberOfGarden }} </div>
+      <div class="aire-stat">Aire totale trouvée : {{ this.totalArea }} m2 </div>
     </div>
   </div>
 </div>
