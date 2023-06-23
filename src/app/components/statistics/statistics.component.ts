@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Coordinates, GeolocService } from 'src/app/services/geoloc.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
-import { map } from 'rxjs/operators';
 import { User } from 'src/app/models/user';
 import { Badge } from 'src/app/models/badge';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss']
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent implements OnInit, OnChanges {
 
   sub: any;
   users: any;
@@ -39,55 +39,73 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit() {
     this.getCurrentPosition();
-    this.checkForConnectedUser();
-    this.calculateDistance(this.currentUser);
+    this.checkForConnectedUser().subscribe(() => {
+      this.calculateDistance(this.currentUser);
+    });
   }
 
-  checkForConnectedUser() {
-    if (localStorage.getItem('pseudo') != null) {
-      this.userService.getConnectedUser()
-        .subscribe((data: any) => {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentUser']) {
+      this.calculateDistance(changes['currentUser'].currentValue);
+    }
+  }
+
+  checkForConnectedUser(): Observable<any> {
+    return new Observable<any>((observer) => {
+      if (localStorage.getItem('pseudo') != null) {
+        this.userService.getConnectedUser().subscribe((data: any) => {
           this.users = data;
           this.connectedUserPseudo = localStorage.getItem('pseudo');
           if (this.connectedUserPseudo != null && this.connectedUserPseudo !== undefined) {
             this.userFromDb = this.users.find((userFromDb: any) => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
-            this.currentUser = this.userFromDb;
-            this.currentUser.distance = 10;
-            console.log(this.currentUser);
-            this.userBadges = this.currentUser.badges;
-            this.calculateDistance(this.currentUser); // Appel de calculateDistance() après avoir défini this.currentUser
+            if (this.userFromDb) {
+              this.currentUser = this.userFromDb;
+              this.currentUser.distance = 10;
+              console.log(this.currentUser);
+              this.userBadges = this.currentUser.badges;
+              observer.next();
+              observer.complete();
+            } else {
+              observer.error('User not found');
+            }
+          } else {
+            observer.error('Connected user pseudo is null or undefined');
           }
         });
-    } else {
-      this.retrievedUser = null;
-    }
-  }
-
-
-  calculateDistance(currentUser: User) {
-    this.geolocService.getCurrentPosition().subscribe(
-      (position: Coordinates) => {
-        const latitudeStart = position.latitude;
-        const longitudeStart = position.longitude;
-        const latitudeEnd = this.userLatitude !== undefined ? this.userLatitude : 0;
-        const longitudeEnd = this.userLongitude !== undefined ? this.userLongitude : 0;
-  
-        const distanceInMeters = this.calculateDistanceBetweenPoints(
-          latitudeStart,
-          longitudeStart,
-          latitudeEnd,
-          longitudeEnd
-        );
-        this.currentUser.distance = this.convertMetersToKilometers(distanceInMeters);
-        console.log(this.currentUser.distance); // Afficher la distance mise à jour avec trois décimales
-      },
-      (error: any) => {
-        console.error('Erreur de géolocalisation :', error);
+      } else {
+        this.retrievedUser = null;
+        observer.error('Local storage pseudo is null');
       }
-    );
+    });
   }
 
+  calculateDistance(currentUser: User): Observable<any> {
+    return new Observable<any>((observer) => {
+      this.geolocService.getCurrentPosition().subscribe(
+        (position: Coordinates) => {
+          const latitudeStart = position.latitude;
+          const longitudeStart = position.longitude;
+          const latitudeEnd = this.userLatitude !== undefined ? this.userLatitude : 0;
+          const longitudeEnd = this.userLongitude !== undefined ? this.userLongitude : 0;
 
+          const distanceInMeters = this.calculateDistanceBetweenPoints(
+            latitudeStart,
+            longitudeStart,
+            latitudeEnd,
+            longitudeEnd
+          );
+          this.currentUser.distance = this.convertMetersToKilometers(distanceInMeters);
+          console.log(this.currentUser.distance);
+          observer.next();
+          observer.complete();
+        },
+        (error: any) => {
+          console.error('Erreur de géolocalisation :', error);
+          observer.error('Geolocation error');
+        }
+      );
+    });
+  }
 
   calculateDistanceBetweenPoints(
     lat1: number,
@@ -119,7 +137,7 @@ export class StatisticsComponent implements OnInit {
 
   convertMetersToKilometers(meters: number): number {
     if (isNaN(meters) || meters === undefined) {
-      return 1; // Ou une valeur par défaut appropriée si la distance est invalide
+      return 0; // Ou une valeur par défaut appropriée si la distance est invalide
     }
     return parseFloat((meters / 1000).toFixed(3)); // Utiliser toFixed(3) pour afficher trois décimales
   }
@@ -149,6 +167,7 @@ export class StatisticsComponent implements OnInit {
       next: (coords: Coordinates) => {
         this.userLatitude = coords.latitude !== undefined ? coords.latitude : 0;
         this.userLongitude = coords.longitude !== undefined ? coords.longitude : 0;
+        this.calculateDistance(this.currentUser);
       },
       error: (error: string) => {
         console.error(error);
@@ -160,7 +179,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   getNumberOfUnlockedBadges(): any {
-    return this.currentUser.badges.length;
+    return this.currentUser.badges;
     console.log(this.currentUser);
     // return 0;
   }
