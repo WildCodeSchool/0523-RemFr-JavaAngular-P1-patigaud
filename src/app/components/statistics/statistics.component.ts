@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { Coordinates, GeolocService } from 'src/app/services/geoloc.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
@@ -6,19 +6,24 @@ import { User } from 'src/app/models/user';
 import { Badge } from 'src/app/models/badge';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { Observable } from 'rxjs/internal/Observable';
+import { map } from 'rxjs';
+import { Garden } from 'src/app/models/garden';
+import { GardenService } from "src/app/services/garden/garden.service";
+import { Location } from "../../location";
+import { ApiGardenService } from "src/app/services/api-garden/api-gardens.service";
 
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss']
 })
-export class StatisticsComponent implements OnInit, OnChanges {
+export class StatisticsComponent implements OnInit, AfterViewChecked { //OnChanges, 
 
   sub: any;
   users: any;
-  userLatitude: number | undefined;
-  userLongitude: number | undefined;
-  currentUser: any;
+  userLatitude: any;
+  userLongitude: any;
+  public currentUser: any = "";
   userBadges: Badge[] = [];
   connectedUserPseudo: any = "";
   badgeObtentionDate: any[] = [];
@@ -27,27 +32,111 @@ export class StatisticsComponent implements OnInit, OnChanges {
   badge: Badge = new Badge();
   userFromDb: any;
   retrievedUser: any;
+  private readyGardens = false
+  private readyAPI = false
+  private allUsers: User[] = [];
+  private gardens: Garden[] = []; 
+  private locations!: Location[];
+  public totalArea = 0; 
+  public numberOfGarden = 0;
+  public calculatedDistance = 0;
+  public userPseudo : any = "";
 
   constructor(
     private userService: UserService,
     private geolocService: GeolocService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private db: AngularFireDatabase
+    private db: AngularFireDatabase,
+    private GardenService: GardenService,
+    private ApiGardenService: ApiGardenService,
   ) {
   }
 
   ngOnInit() {
     this.getCurrentPosition();
-    this.checkForConnectedUser().subscribe(() => {
-      this.calculateDistance(this.currentUser);
-    });
+    this.getAllGardens();
+    this.getAllUsers();
+    this.getLocations();
+    this.calculateDistance()
+    // this.checkForConnectedUser().subscribe(() => {
+    //   this.calculateDistance();
+    // });
   }
 
+ /*
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['currentUser']) {
       this.calculateDistance(changes['currentUser'].currentValue);
     }
+  } */
+
+  ngAfterViewChecked(): void {
+      if(this.readyGardens && this.readyAPI) {
+        this.readyGardens = false
+        this.readyAPI = false
+        this.userPseudo = localStorage.getItem('pseudo')
+        this.calcAreas()
+      }
+  }
+
+  calcAreas(): void {
+    const currentUser = localStorage.getItem('pseudo')
+    let area = 0
+    let foundGarden = 0
+    for(let i = 0; i < this.gardens.length; i++) {
+        if (this.gardens[i].userKey == currentUser) {
+          foundGarden += 1
+          for(let j = 0; j < this.locations.length; j++) {
+            if (this.locations[j].id == this.gardens[i].gardenId) {
+              area += this.locations[j].area
+
+            }
+          }
+        }
+    }
+    this.numberOfGarden = foundGarden
+    this.totalArea = area
+  }  
+
+  getLocations() {
+    this.ApiGardenService.getGardenList().subscribe((response) => {
+      this.locations = response;
+      this.readyAPI = true
+    });
+  }  
+
+  getAllGardens() {
+    this.GardenService.getAll().snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe((data: any) => {
+        this.gardens = data;
+        this.readyGardens = true
+      })    
+  }
+  
+  getAllUsers() {
+    this.userService.getAll().snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe((data: any) => {
+        this.allUsers = data;
+        const currentUser = localStorage.getItem('pseudo')
+        for (let i = 0; i < this.allUsers.length; i++) {
+          if ((this.allUsers[i].pseudo == currentUser) && this.allUsers[i].distance) {
+            this.calculatedDistance = this.allUsers[i].distance
+          }
+        }
+      })     
   }
 
   checkForConnectedUser(): Observable<any> {
@@ -61,7 +150,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
             if (this.userFromDb) {
               this.currentUser = this.userFromDb;
               this.currentUser.distance = 10;
-              console.log(this.currentUser);
+              //console.log(this.currentUser);
               this.userBadges = this.currentUser.badges;
               observer.next();
               observer.complete();
@@ -79,32 +168,28 @@ export class StatisticsComponent implements OnInit, OnChanges {
     });
   }
 
-  calculateDistance(currentUser: User): Observable<any> {
-    return new Observable<any>((observer) => {
-      this.geolocService.getCurrentPosition().subscribe(
-        (position: Coordinates) => {
-          const latitudeStart = position.latitude;
-          const longitudeStart = position.longitude;
-          const latitudeEnd = this.userLatitude !== undefined ? this.userLatitude : 0;
-          const longitudeEnd = this.userLongitude !== undefined ? this.userLongitude : 0;
 
+  calculateDistance(): void {
+      this.geolocService.getCurrentPosition().subscribe({
+        next: ((position: any) => {
+          const latitudeStart = position.Lat;
+          const longitudeStart = position.Lon;
+          const latitudeEnd = this.userLatitude !== undefined ? this.userLatitude : 0;
+          const longitudeEnd = this.userLongitude !== undefined ? this.userLongitude : 0;          
           const distanceInMeters = this.calculateDistanceBetweenPoints(
             latitudeStart,
             longitudeStart,
             latitudeEnd,
             longitudeEnd
           );
-          this.currentUser.distance = this.convertMetersToKilometers(distanceInMeters);
-          console.log(this.currentUser.distance);
-          observer.next();
-          observer.complete();
-        },
-        (error: any) => {
+          if (typeof(this.convertMetersToKilometers(distanceInMeters)) == "number") {
+            this.calculatedDistance += this.convertMetersToKilometers(distanceInMeters)
+          }                    
+       }),
+       error: ((error: any) => {
           console.error('Erreur de géolocalisation :', error);
-          observer.error('Geolocation error');
-        }
-      );
-    });
+        })
+      });
   }
 
   calculateDistanceBetweenPoints(
@@ -167,7 +252,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
       next: (coords: Coordinates) => {
         this.userLatitude = coords.latitude !== undefined ? coords.latitude : 0;
         this.userLongitude = coords.longitude !== undefined ? coords.longitude : 0;
-        this.calculateDistance(this.currentUser);
+        this.calculateDistance();
       },
       error: (error: string) => {
         console.error(error);
@@ -180,7 +265,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
 
   getNumberOfUnlockedBadges(): any {
     return this.currentUser.badges;
-    console.log(this.currentUser);
+    //console.log(this.currentUser);
     // return 0;
   }
 }

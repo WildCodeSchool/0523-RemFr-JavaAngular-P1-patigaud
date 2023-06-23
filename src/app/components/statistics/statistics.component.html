@@ -1,7 +1,7 @@
 <div class="container">
   <header class="header">
     <div class="header-left">
-      <h1>{{ currentUser.pseudo }}</h1>
+      <h1>{{ this.userPseudo }}</h1>
     </div>
     <div class="header-right">
       <button type="submit" class="button-deconnexion" (click)="disconnectUser()">Se déconnecter</button>
@@ -22,10 +22,10 @@
   <div class="big-square">
     <h2>Statistiques:</h2>
     <div class="statistiques">
-      <div class="km-stat">KM parcourus : {{ currentUser.distance }}</div>
-      <div class="jardin-stat">Jardins trouvés :</div>
+      <div class="km-stat">KM parcourus : {{ this.calculatedDistance }}</div>
       <div class="badge-stat">Nombre badges : {{ getNumberOfUnlockedBadges() }}</div>
-      <div class="aire-stat">Aire totale trouvée :</div>
+      <div class="jardin-stat">Jardins trouvés : {{ this.numberOfGarden }} </div>
+      <div class="aire-stat">Aire totale trouvée : {{ this.totalArea }} m2 </div>
     </div>
   </div>
 </div>
