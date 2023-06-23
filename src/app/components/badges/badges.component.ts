@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
 import { Badge } from 'src/app/models/badge';
 import { User } from 'src/app/models/user';
+import { ApiGardenService } from 'src/app/services/api-garden/api-gardens.service';
 import { GardenService } from 'src/app/services/garden/garden.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -12,191 +13,156 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './badges.component.html',
   styleUrls: ['./badges.component.scss']
 })
-
 export class BadgesComponent implements OnInit {
   private dbPath = '/badge';
 
   badge: Badge = new Badge();
   badgeRef: AngularFireList<Badge>;
-  reference: any;
-  id: any;
   badges: any[] = [];
-  sub: any;
   users: User[] = [];
   connectedUserPseudo: any = "";
-  userFromDb: any;
   retrievedUser: any;
-  userBadges: any[] = [];
-  userBadge: any;
-  result: any;
-  obtention_date: Date = new Date();
-  badgeObtentionDate: any[] = [];
-  badgeObtentionNumber: number[] = [];
-  private gardens: any[] = [];
-  locations: any;
-  public connectedBadge!: string | null;
-  foundedGardens: any[] = [];
-  numberOfBadgesByUser: number = 0;
-  matchingResult: any = []
+  userBadges: any;
+  matchingResult: any = [];
+  gardensLoaded = false;
+  allGardensAPI: any[] = [];
+  selectedBadge = -1;
+  audio: HTMLAudioElement = new Audio("/assets/sounds/coin2.mp3");
 
   constructor(
     private db: AngularFireDatabase,
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private gardenService: GardenService,
+    private apiGardenService: ApiGardenService
   ) {
     this.badgeRef = db.list(this.dbPath);
   }
 
   ngOnInit(): void {
     this.getConnectedBadge();
-    this.getVisitedgardens();
+    this.checkForConnectedUser();
+    this.getAllAPIGardens();
   }
-  test: any = [];
+
   checkForConnectedUser() {
-    if (localStorage.getItem('pseudo') != null) {
-      this.userService.getConnectedUser()
-        .subscribe((data: any) => {
-          this.users = data;
-          this.connectedUserPseudo = localStorage.getItem('pseudo');
-          this.userFromDb = this.users.find(userFromDb => userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase());
-          this.retrievedUser = this.userFromDb;
-          this.userBadges = this.retrievedUser.badges;
-          this.giveBadges()
-          if (this.userBadges != undefined) {
+    const localStoragePseudo = localStorage.getItem('pseudo');
+    if (localStoragePseudo) {
+      this.userService.getConnectedUser().subscribe((data: any) => {
+        this.users = data;
+        this.connectedUserPseudo = localStoragePseudo;
+        this.retrievedUser = this.users.find((userFromDb: any) =>
+          userFromDb.pseudo?.toLowerCase() === this.connectedUserPseudo.toLowerCase()
+        );
+        this.userBadges = this.retrievedUser?.badges || [];
 
-            next: {
-              this.retrievedUser = this.userFromDb;
+        this.getVisitedGardens();
 
-              console.log(this.userBadges);
-              this.badges;
-              for (let i = 0; i < this.badges.length; i++) {
-                let matchingBadge = this.userBadges.find((badge: any) => badge.name === this.badges[i].name);
-                this.badges[i].gotIt = matchingBadge ? true : false;
-                this.matchingResult.push(matchingBadge)
-              }
-            }
-          }
-        });
-
-
-      // console.log(this.badges);
-
-
-      // this.numberOfBadgesByUser = Object.keys(this.userBadges).length;
-      // for (const propriety in this.userBadges) {
-      //   this.badgeObtentionDate.push(this.userBadges[propriety].obtention_date);
-      //   this.badgeObtentionNumber.push(this.userBadges[propriety].obtention_number);
-
-      //   this.test.push(propriety);
-      // } console.log(this.badgeObtentionNumber);
-
-      // this.test = Object.entries(this.userBadges).map((badge: any) => {
-      //   badge[1].gotIt = true;
-      //   return badge;
-      // })
-
-      // for (let i = 0; i < this.numberOfBadgesByUser; i++) {
-
-
-      //     this.badgeObtentionDate[i] = this.userBadges[i].obtention_date;
-      //     this.badgeObtentionNumber[i] = this.userBadges[i].obtention_number;
-      //   }     
+        if (typeof this.userBadges === 'object') {
+          this.badges.forEach((badge: any) => {
+            const matchingBadge = this.userBadges[badge.name];
+            badge.gotIt = !!matchingBadge;
+            this.matchingResult.push(matchingBadge);
+          });
+        }
+      });
     } else {
       this.retrievedUser = null;
     }
   }
 
-  getAll(): AngularFireList<Badge> {
-    return this.badgeRef;
+  giveBadges(gardens: any[]) {
+    const allGardensConnectedUser = gardens.filter(garden => garden.userKey === this.retrievedUser.pseudo);
+    const biggestGarden = this.allGardensAPI.reduce((prev, current) => (prev.area > current.area) ? prev : current);
+    const smallestGarden = this.allGardensAPI.reduce((prev, current) => (prev.area < current.area) ? prev : current);
+    const allGardensInTheCityOfTours = this.allGardensAPI.filter(garden => garden.city === "Tours");
+
+    const date = new Date();
+
+    for (let i = 0; i < allGardensConnectedUser.length; i++) {
+      const garden = allGardensConnectedUser[i];
+
+      if (allGardensConnectedUser.length === 1 && this.userBadges["badge_1"] === undefined) {
+        this.updateUserBadge("badge_1", date, 1);
+      }
+
+      if (allGardensConnectedUser.length === 2 && this.userBadges["badge_2"] === undefined) {
+        this.updateUserBadge("badge_2", date, 2);
+      }
+
+      if (garden.gardenId === biggestGarden.id && this.userBadges["badge_3"] === undefined) {
+        this.updateUserBadge("badge_3", date, 3);
+      }
+
+      if (allGardensConnectedUser.length === allGardensInTheCityOfTours.length && this.userBadges["badge_4"] === undefined) {
+        this.updateUserBadge("badge_4", date, 4);
+      }
+
+      if (allGardensConnectedUser.length === 10 && this.userBadges["badge_5"] === undefined) {
+        this.updateUserBadge("badge_5", date, 5);
+      }
+
+      if (garden.gardenId === smallestGarden.id && this.userBadges["badge_6"] === undefined) {
+        this.updateUserBadge("badge_6", date, 6);
+      }
+
+      if (allGardensConnectedUser.length >= 100 && this.userBadges["badge_7"] === undefined) {
+        this.updateUserBadge("badge_7", date, 7);
+      }
+    }
   }
 
-  getVisitedgardens() {
-    this.gardenService.getAll().snapshotChanges()
-      .pipe(
-        map(changes =>
-          changes.map(c =>
-            ({ key: c.payload.key, ...c.payload.val() })
-          )
-        )
-      ).subscribe(data => {
-        this.gardens = data;
-      })
 
+
+  updateUserBadge(badgeName: string, date: Date, number: number) {
+    const badge = this.badges.find(b => b.name === badgeName);
+    if (badge) {
+      const newBadge = { ...badge, obtention_date: date, obtention_number: number };
+      this.userService.updateUserBadge(this.retrievedUser.key, newBadge);
+    }
   }
 
-  giveBadges() {
-    console.log(this.foundedGardens);
-
-
-
-    const gardensLentgh = this.foundedGardens.length;
-    if (this.badge = this.badges.find(badge => badge.name === "badge_1")){    
-
-      let newBadge = { ...this.badge, obtention_number: 1 };
-           this.userService.update(`${this.retrievedUser.key}/badges/1`, newBadge);
+  create(badge: Badge) {
+    if (!this.retrievedUser.badges) {
+      this.retrievedUser.badges = [];
     }
 
-    // switch (gardensLentgh) {
+    badge.obtention_date = new Date().toLocaleDateString();
+    badge.obtention_number = this.retrievedUser.badges.length + 1;
 
-    //   case 1: this.badge = this.badges.find(badge => badge.name === "badge_1");
-    //     let newBadge = { ...this.badge, obtention_date: date, obtention_number: 1 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/1`, newBadge);
-    //     break
-    //   case 2: this.badge = this.badges.find(badge => badge.name === "badge_2");
-    //     let newBadge2 = { ...this.badge, obtention_date: date, obtention_number: 2 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/2`, newBadge2);
-    //     break
-    //   case 3: this.badge = this.badges.find(badge => badge.name === "badge_3");
-    //     let newBadge3 = { ...this.badge, obtention_date: date, obtention_number: 3 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/3`, newBadge3);
-    //     break
-    //   case 4: this.badge = this.badges.find(badge => badge.name === "badge_4");
-    //     let newBadge4 = { ...this.badge, obtention_date: date, obtention_number: 4 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/4`, newBadge4);
-    //     break
-    //   case 5: this.badge = this.badges.find(badge => badge.name === "badge_5");
-    //     let newBadge5 = { ...this.badge, obtention_date: date, obtention_number: 5 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/5`, newBadge5);
-    //     break
-    //   case 6: this.badge = this.badges.find(badge => badge.name === "badge_6");
-    //     let newBadge6 = { ...this.badge, obtention_date: date, obtention_number: 6 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/6`, newBadge6);
-    //     break
-    //   case 7: this.badge = this.badges.find(badge => badge.name === "badge_7");
-    //     let newBadge7 = { ...this.badge, obtention_date: date, obtention_number: 7 };
-    //     this.userService.update(`${this.retrievedUser.key}/badges/7`, newBadge7);
-    //     break
-    // }
-    this.foundedGardens = this.gardens.map((garden: any) => {
-      if (garden.userKey === this.retrievedUser.pseudo) {
-        this.foundedGardens.push(garden);
-      }
-    })
-    console.log(this.foundedGardens.length);
-
+    this.retrievedUser.badges.push(badge);
+    this.userService.update(this.retrievedUser.key, { badges: this.retrievedUser.badges })
+      .then(() => {
+        this.matchingResult.push(badge);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  create(badge: Badge): any {
-
-    const test = this.badgeRef.push(badge);
-    const key = test.key;
-    return key
+  getVisitedGardens() {
+    if (!this.gardensLoaded) {
+      this.gardenService.getAll().snapshotChanges()
+        .pipe(
+          map(changes =>
+            changes.map(c =>
+              ({ key: c.payload.key, ...c.payload.val() })
+            )
+          )
+        ).subscribe(data => {
+          this.gardensLoaded = true;
+          this.giveBadges(data);
+        });
+    }
   }
 
-  update(key: any, value: any): Promise<void> {
-    return this.badgeRef.update(key, value);
+  getAllAPIGardens() {
+    this.apiGardenService.getGardenList().subscribe((data: any) => {
+      this.allGardensAPI = data;
+    });
   }
 
-  delete(key: string): Promise<void> {
-    return this.badgeRef.remove(key);
-  }
-
-  deleteAll(): Promise<void> {
-    return this.badgeRef.remove();
-  }
-
-  public getConnectedBadge(): any {
+  getConnectedBadge(): any {
     return this.badgeRef.snapshotChanges()
       .pipe(
         map(changes =>
@@ -206,17 +172,11 @@ export class BadgesComponent implements OnInit {
         )
       ).subscribe(data => {
         this.badges = data;
-        this.checkForConnectedUser();
-      })
+      });
   }
-
-  isClicked: boolean = false;
-  selectedBadge: any = -1;
-  audio: HTMLAudioElement = new Audio("/assets/sounds/coin2.mp3");
 
   turnBadge(index: number) {
     this.selectedBadge = index;
-    this.isClicked = !this.isClicked;
     this.audio.play();
   }
 }

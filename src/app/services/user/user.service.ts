@@ -56,4 +56,9 @@ export class UserService {
       )
   }
 
+  updateUserBadge(userKey: string, badge: any): Promise<void> {
+    const badgePath = `${this.dbPath}/${userKey}/badges/${badge.name}`;
+    return this.db.object(badgePath).update(badge);
+  }
+
 }
