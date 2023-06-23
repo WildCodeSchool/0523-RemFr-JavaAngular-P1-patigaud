@@ -102,11 +102,12 @@ export class BadgesComponent implements OnInit {
         )
       ).subscribe(data => {
         this.badges = data;
+          this.checkForConnectedUser();
         this.checkForConnectedUser();
       })
   }
 
-  isClicked: boolean = false;
+  isClicked = false;
   selectedBadge: any = -1;
   audio: HTMLAudioElement = new Audio("/assets/sounds/coin2.mp3");
 

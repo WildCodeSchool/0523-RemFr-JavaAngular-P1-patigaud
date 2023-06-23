@@ -26,6 +26,7 @@ import { environment } from '../app/environments/environment'
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FormsModule } from "@angular/forms";
+import { StatisticsComponent } from './components/statistics/statistics.component'; 
 import { BadgesComponent } from './components/badges/badges.component';
 import { DetailsComponent } from './components/patidex/details/details.component'; 
 import { BackgroundCheckComponent } from './components/background-check/background-check.component'; 
@@ -48,6 +49,7 @@ import { BackgroundCheckComponent } from './components/background-check/backgrou
     AddUserComponent,
     ViewUserComponent,
     SearchBarComponent,
+    StatisticsComponent,
     BadgesComponent,
     DetailsComponent,
     BackgroundCheckComponent,
