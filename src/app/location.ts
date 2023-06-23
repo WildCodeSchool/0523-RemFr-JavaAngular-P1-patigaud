@@ -8,6 +8,7 @@ export class Location {
         public postalCode: number,
         public label: string,
         public city: string,
+        public image: string,
         public shape?: Array<number>,
     ) { }
 }

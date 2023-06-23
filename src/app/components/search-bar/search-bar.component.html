@@ -1,0 +1,35 @@
+<div class="top-bar" id="top-bar" [@expandCollapse]="isFocused ? 'expanded' : 'collapsed'">
+  <input type="text" placeholder="Search..." (focus)="toggleFocus($event)" (input)="onInput($event)"
+    [(ngModel)]="inputText" id="search-input" [ngClass]="{'focused': isFocused}" />
+  <div class="search" id="search-icon" (click)="toggleUnFocus($event)" [ngClass]="{'test': isFocused}"></div>
+  <div class="result-list" *ngIf="isFocused">
+    <div class="result-container" *ngFor="let result of searchResults" (click)="goToLocation(result)">
+      <div class="result-address">{{ result.address }}</div>
+      <div class="result-city">{{ result.city }}, {{result.postalCode}}</div>
+    </div>
+  </div>
+  <div class="sec-center" *ngIf="!isFocused"> 	
+    <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" (click)="OpenCloseDropDown()" [checked]="isDropDownOpen"/>
+    <label class="for-dropdown" for="dropdown"><img src="./assets/filters.svg" width="30px" height="30px"/></label>
+    <div class="section-dropdown"> 
+      <input class="dropdown-sub-city" type="checkbox" id="dropdown-sub-city" name="dropdown-sub-city" [ngModel]="selectedIndex === 0" (change)="changeSelection($event, 0)"/>
+      <label class="for-dropdown-sub-city" for="dropdown-sub-city">Villes<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-city" name="city" *ngFor="let city of optionsFilters.optionsCity" [class.selected]="option === city" (click)="selectOption(city)">
+        <p>{{ city }}</p>
+        <div class="serparator"></div>
+      </div>
+      <input class="dropdown-sub-postalCode" type="checkbox" id="dropdown-sub-postalCode" name="dropdown-sub-postalCode" [ngModel]="selectedIndex === 1" (change)="changeSelection($event, 1)"/>
+      <label class="for-dropdown-sub-postalCode" for="dropdown-sub-postalCode">Code Postal<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-postalCode" name="postalCode" *ngFor="let postalCode of optionsFilters.optionsPostalCode" [class.selected]="option === postalCode" (click)="selectOption(postalCode)">
+        <p>{{ postalCode }}</p>
+        <div class="serparator"></div>
+      </div>
+      <input class="dropdown-sub-structure" type="checkbox" id="dropdown-sub-structure" name="dropdown-sub-structure" [ngModel]="selectedIndex === 2" (change)="changeSelection($event, 2)"/>
+      <label class="for-dropdown-sub-structure" for="dropdown-sub-structure">Structures<i class="uil uil-plus"></i></label>
+      <div class="section-dropdown-sub-structure" name="city" *ngFor="let structure of optionsFilters.optionsStructure" [class.selected]="option === structure" (click)="selectOption(structure)">
+        <p>{{ structure }}</p>
+        <div class="serparator"></div>
+      </div>
+    </div>
+  </div>
+</div>
