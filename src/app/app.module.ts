@@ -28,6 +28,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { FormsModule } from "@angular/forms";
 import { BadgesComponent } from './components/badges/badges.component';
 import { DetailsComponent } from './components/patidex/details/details.component'; 
+import { BackgroundCheckComponent } from './components/background-check/background-check.component'; 
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { DetailsComponent } from './components/patidex/details/details.component
     SearchBarComponent,
     BadgesComponent,
     DetailsComponent,
+    BackgroundCheckComponent,
 
   ],
   imports: [
