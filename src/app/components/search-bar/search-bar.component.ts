@@ -1,8 +1,11 @@
-import { Component, Input, HostListener, AfterViewInit } from "@angular/core";
+import { Component, Input, HostListener, AfterViewInit, OnInit } from "@angular/core";
 import { Location } from "../../location";
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MapService } from "src/app/services/map/map.service";
 import * as L from "leaflet";
+import { map } from 'rxjs';
+import { Garden } from 'src/app/models/garden';
+import { GardenService } from "src/app/services/garden/garden.service";
 
 @Component({
   selector: "app-search-bar",
@@ -16,7 +19,7 @@ import * as L from "leaflet";
     ]),
   ],
 })
-export class SearchBarComponent implements AfterViewInit {
+export class SearchBarComponent implements AfterViewInit, OnInit {
   @Input() locations!: Location[];
   searchResults: Location[] = [];
   map!: L.Map;
@@ -35,8 +38,10 @@ export class SearchBarComponent implements AfterViewInit {
   result: any;
   private readonly DEFAULT_MAP_ZOOM_FLYTO: number = 18;
   private readonly DEFAULT_MAP_ZOOM_FLYTO_ZONE: number = 13;
+  private gardens: Garden[] = [];
+  private gardensLoaded = false;
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService, private GardenService: GardenService) { }
 
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
@@ -45,6 +50,10 @@ export class SearchBarComponent implements AfterViewInit {
     if (!isInsideSearchBar) {
       this.isFocused = false;
     }
+  }
+
+  ngOnInit(): void {
+    this.getAllGardens();
   }
 
   ngAfterViewInit() {
@@ -64,6 +73,20 @@ export class SearchBarComponent implements AfterViewInit {
     this.isFocused = true;
     this.itHasBeenReversed = true;
   }
+
+  getAllGardens() {
+    this.GardenService.getAll().snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe((data: any) => {
+        this.gardens = data;
+        this.gardensLoaded = true;
+      })    
+  }  
 
   toggleUnFocus(event: Event) {
     event.stopPropagation();
@@ -138,11 +161,27 @@ export class SearchBarComponent implements AfterViewInit {
     `;
     L.marker(object.geoPoint, this.myIcon).addTo(this.map).bindPopup(popupContent);
     if (object.shape && Array.isArray(object.shape) && Array.isArray(object.shape[0])) {
+      let foundInDb = false
+      if (this.gardensLoaded) {
+        const currentUser = localStorage.getItem('pseudo')
+        for(let i = 0; i < this.gardens.length; i++) {
+          if ((this.gardens[i].userKey == currentUser) && (object.id == this.gardens[i].gardenId )) {
+            foundInDb = true
+          }
+        }
+      }
       const coordinatesReversed = object.shape[0].map((coords) => coords);
       this.result = coordinatesReversed.map((coords) => [coords[1], coords[0]]);
-      L.polygon(this.result, {
-        color: "lightgreen",
-      }).addTo(this.map);
+      if (foundInDb) {
+        L.polygon(this.result, {
+          color: "lightgreen",
+        }).addTo(this.map);        
+      } else {
+        L.polygon(this.result, {
+          color: "darkgrey",
+        }).addTo(this.map);         
+      }
+
     }
   }
 
