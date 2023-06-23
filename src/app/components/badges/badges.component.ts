@@ -174,7 +174,6 @@ export class BadgesComponent implements OnInit {
         this.badges = data;
       });
   }
-
   turnBadge(index: number) {
     this.selectedBadge = index;
     this.audio.play();

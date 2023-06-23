@@ -17,7 +17,7 @@ export class AddUserComponent implements OnInit {
   userFromDb: any;
   connectedUser: User = {}
   connectedUserPseudo: any = "";
-  freshlyConnectedUser: boolean = false;
+  freshlyConnectedUser = false;
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class AddUserComponent implements OnInit {
       localStorage.setItem('pseudo', this.user.pseudo);
       localStorage.setItem('freshlyConnectedUser', 'true');
       this.router.navigate(['home']);
-    };
+    }
   }
 
   retrieveUsers(): void {

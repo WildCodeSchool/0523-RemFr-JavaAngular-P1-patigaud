@@ -1,0 +1,109 @@
+.container {
+  font-family: passero one;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 720px;
+  color: white;
+  background-color: #98bf64;
+}
+
+.header {
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(180deg, #00bf7d 0%, #008a5a 100%);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Utilisation de justify-content pour espacer les éléments horizontalement */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  flex: 1; /* Utilisation de flex pour permettre au titre de prendre autant d'espace que nécessaire */
+}
+
+.header-right {
+  margin-right: 15px; /* Marge à droite pour séparer le bouton du titre */
+}
+
+.button-deconnexion {
+  font-family: passero one;
+  background-color: #22ca84;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+}
+
+.button-deconnexion:hover {
+  background-color: #22ca84;
+}
+
+.collection {
+  color: white;
+  margin: 5px;
+}
+
+.fake-badge-group {
+  display: flex;
+  align-items: center;
+}
+
+.fake-badge {
+  width: 60px;
+  height: 60px;
+  background-color: #fff;
+  margin: 0px 20px 10px 20px;
+}
+
+.rectangle {
+  width: 90%;
+  height: auto;
+  background-color: #00bf7d;
+  margin-bottom: 20px;
+  padding-left: 15px;
+  background: linear-gradient(
+    180deg,
+    #00bf7d 0%,
+    #008a5a 99.99%,
+    rgba(0, 191, 125, 0) 100%
+  );
+  border: 1px solid #000000;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  text-decoration: none;
+  color: inherit;
+}
+
+.rectangle h2 {
+  font-weight: normal;
+}
+
+.big-square {
+  width: 90%;
+  background-color: #00bf7d;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 10px 10px 15px;
+}
+
+.statistiques {
+  padding-left: 20px;
+}
+
+.km-stat,
+.jardin-stat,
+.badge-stat,
+.aire-stat {
+  font-size: 20px;
+  font-weight: normal;
+  padding-bottom: 10px;
+}

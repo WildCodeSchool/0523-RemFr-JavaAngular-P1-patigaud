@@ -5,7 +5,7 @@
           <img class="image_{{badge.name}}" (click)="badge.gotIt && turnBadge(index)"
             [ngClass]="{'flip-vertical-right':index == selectedBadge}" [src]="badge.image_link" [alt]="badge.name">
           <div class="back_infos" [ngClass]="index == selectedBadge ? 'show, flip-vertical-right' : 'hidden' ">
-            Obtenu le {{ matchingResult[index]?.obtention_date | date }} <!-- Update here -->
+            Obtenu le {{ matchingResult[index]?.obtention_date | date }}
             <br>
             Badge n° {{ matchingResult[index]?.obtention_number }}/{{ badges.length }}
           </div>

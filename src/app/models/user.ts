@@ -4,6 +4,7 @@ export class User {
     key?: string | null;
     pseudo?: string | null;
     gender?: string;
-    kilometers?: number;   
+    kilometers?: number;
+    distance?: any;
     badges?: Badge[];
 }
